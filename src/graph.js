@@ -29,7 +29,7 @@ groupsLayer.attr('pointer-events', 'none');
 var nodesLayer = vis.append('g');
 var linksLayer = vis.append('g');
 
-export async function startApp(dataUrl) {
+export async function loadGraph(dataUrl) {
     const response = await fetch(dataUrl);
     const data = await response.json();
     const nodeLookup = {};

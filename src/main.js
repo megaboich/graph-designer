@@ -1,3 +1,3 @@
-import {startApp} from './app.js';
+import { loadGraph } from './graph.js';
 
-startApp('graph-samples/sucrose-breakdown.json');
+loadGraph('graph-samples/sucrose-breakdown.json');

@@ -19,12 +19,19 @@ body {
 
 #top-menu {
 	grid-area: top-menu;
-	background-color: gray;
+	background-color: #ccc;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+#top-menu > * {
+	margin-left: 8px;
+	margin-right: 8px;
 }
 
 #left-menu {
 	grid-area: left-menu;
-	background-color: lightgray;
+	background-color: #ddd;
 }
 
 #svg-main {
