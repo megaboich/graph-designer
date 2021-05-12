@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Graph layout designer</title>
-		<link rel="stylesheet" href="src/styles/ui.css"></link>
-		<link rel="stylesheet" href="src/styles/graph.css"></link>
-		<link rel="icon" href="src/images/favicon.png" type="image/png" />
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Graph layout designer</title>
+    <link rel="stylesheet" href="src/styles/ui.css" />
+    <link rel="stylesheet" href="src/styles/graph.css" />
+    <link rel="icon" href="src/images/favicon.png" type="image/png" />
 
-		<script src="src/lib/d3.v3.js"></script>
-		<script src="src/lib/cola.min.js"></script>
-		<script src="src/main.js" type="module"></script>
-	</head>
-	<body>
-		<div id="top-menu">
-			<p>Graph Layout Designer</p>
-			<a href="https://github.com/megaboich/graph-layout-designer">Source on GitHub</a>
-		</div>
-		<div id="left-menu"></div>
-		<svg id="svg-main"></svg>
-	</body>
+    <!-- This is a development version of Vue.js! -->
+    <script src="https://unpkg.com/vue@3.0.4"></script>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3-drag.v2.min.js"></script>
+    <script src="https://d3js.org/d3-zoom.v2.min.js"></script>
+
+    <script src="src/main.js" type="module"></script>
+  </head>
+
+  <body>
+    <div id="top-panel">
+      <p>Graph Layout Designer</p>
+      <a href="https://github.com/megaboich/graph-layout-designer">
+        Source on GitHub
+      </a>
+    </div>
+    <div id="left-panel"></div>
+    <svg id="svg-main"></svg>
+  </body>
 </html>

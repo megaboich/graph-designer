@@ -1,41 +1,42 @@
 html,
 body {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 body {
-	font-family: 'Helvetica Neue', Helvetica, sans-serif;
-	height: 100vh;
-	width: 100vw;
-	display: grid;
-	grid-template-columns: 255px auto;
-	grid-template-rows: 3rem auto;
-	grid-template-areas:
-		'top-menu top-menu'
-		'left-menu main';
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 255px auto;
+  grid-template-rows: 3rem auto;
+  grid-template-areas:
+    "top-panel top-panel"
+    "left-panel main";
 }
 
-#top-menu {
-	grid-area: top-menu;
-	background-color: #ccc;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
+#top-panel {
+  grid-area: top-panel;
+  background-color: #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
-#top-menu > * {
-	margin-left: 8px;
-	margin-right: 8px;
+#top-panel > * {
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
-#left-menu {
-	grid-area: left-menu;
-	background-color: #ddd;
+#left-panel {
+  grid-area: left-panel;
+  background-color: #ddd;
+  padding: 16px;
 }
 
 #svg-main {
-	grid-area: main;
-	width: 100%;
-	height: 100%;
+  grid-area: main;
+  width: 100%;
+  height: 100%;
 }
