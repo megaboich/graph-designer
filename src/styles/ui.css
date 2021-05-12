@@ -1,0 +1,34 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+body {
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	height: 100vh;
+	width: 100vw;
+	display: grid;
+	grid-template-columns: 255px auto;
+	grid-template-rows: 3rem auto;
+	grid-template-areas:
+		'top-menu top-menu'
+		'left-menu main';
+}
+
+#top-menu {
+	grid-area: top-menu;
+	background-color: gray;
+}
+
+#left-menu {
+	grid-area: left-menu;
+	background-color: lightgray;
+}
+
+#svg-main {
+	grid-area: main;
+	width: 100%;
+	height: 100%;
+}
