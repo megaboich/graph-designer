@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    { "id": "a", "label": "A" },
+    { "id": "b", "label": "B" },
+    { "id": "c", "label": "C" },
+    { "id": "d", "label": "D" },
+    { "id": "e", "label": "E" }
+  ],
+  "links": [
+    { "source": "a", "target": "b" },
+    { "source": "b", "target": "c" },
+    { "source": "c", "target": "d" },
+    { "source": "d", "target": "e" },
+    { "source": "b", "target": "e" }
+  ],
+  "groups": []
+}

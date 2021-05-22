@@ -1,4 +1,4 @@
-import html from "./helpers/html.js";
+import { html } from "./dependencies.js";
 
 export default {
   name: "App",
@@ -16,7 +16,7 @@ export default {
           min="10"
           value=${this.count}
           oninput=${(e) => {
-            this.count == e.target.value;
+            this.count = e.target.value;
           }}
         />
       </label>

@@ -1,27 +1,54 @@
 import LeftPanelApp from "./left-panel.js";
-import { GraphColaLayout } from "./graph-cola-layout.js";
 import { loadGraph } from "./graph-data.js";
-import { renderGraph } from "./graph-render.js";
+import { GraphRendererD3 } from "./graph-renderer-d3.js";
+import { Vue, cola } from "./dependencies.js";
 
 async function initGraph() {
-  const graph = await loadGraph("graph-samples/sucrose-breakdown.json");
-  const tick = renderGraph(graph);
+  const graph = await loadGraph("graph-samples/simple.json");
 
-  const layout = new GraphColaLayout(tick);
-  layout.init({
-    width: 1000,
-    height: 1000,
-    nodes: graph.nodes,
-    links: graph.links,
-    groups: graph.groups,
-    enable: true,
-    forceLinkLength: 100,
+  let needsUpdate = false;
+
+  const layout = new cola.Layout()
+    .nodes(graph.nodes)
+    .links(graph.links)
+    .groups(graph.groups)
+    .convergenceThreshold(0.05)
+    .size([1000, 1000])
+    .jaccardLinkLengths(30)
+    .linkDistance(() => 100)
+    .avoidOverlaps(true)
+    .on(cola.EventType.start, () => {
+      needsUpdate = true;
+    })
+    .on(cola.EventType.end, () => {
+      needsUpdate = false;
+    });
+
+  layout.kick = () => {};
+
+  const render = new GraphRendererD3({
+    graph,
+    onUpdate: () => {
+      needsUpdate = true;
+      layout.resume();
+    },
   });
-}
 
-const app = Vue.createApp({
-  render: () => Vue.h(LeftPanelApp),
-});
-app.mount("#left-panel");
+  layout.start();
+  layout.tick();
+  render.update();
+
+  const app = Vue.createApp({
+    render: () => Vue.h(LeftPanelApp),
+  });
+  app.mount("#left-panel");
+
+  setInterval(() => {
+    if (needsUpdate) {
+      layout.tick();
+      render.update();
+    }
+  }, 20);
+}
 
 initGraph();

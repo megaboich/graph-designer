@@ -15,7 +15,7 @@ export async function loadGraph(dataUrl) {
     return node;
   });
 
-  graph.links = data.links.map((x, i) => {
+  graph.links = data.links.map((x) => {
     const link = {
       source: nodeLookup[x.source].index,
       target: nodeLookup[x.target].index,
@@ -23,7 +23,7 @@ export async function loadGraph(dataUrl) {
     return link;
   });
 
-  graph.groups = data.groups.map((x, i) => {
+  graph.groups = data.groups.map((x) => {
     const group = {
       leaves: x.members.map((id) => nodeLookup[id].index),
       style: x.style,
