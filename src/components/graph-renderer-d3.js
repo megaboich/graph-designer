@@ -1,4 +1,4 @@
-import { cola, d3 } from "./dependencies.js";
+import { cola, d3 } from "../dependencies.js";
 
 const margin = 6;
 const pad = 12;
@@ -11,8 +11,41 @@ export class GraphRendererD3 {
   }
 
   setup() {
-    const outer = d3.select("#svg-main").attr("pointer-events", "all");
+    const outer = d3
+      .select("#svg-main")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("pointer-events", "all");
     this.outer = outer;
+
+    outer.append("style").text(`
+      .background {
+        fill: white;
+      }
+
+      .node {
+        stroke: black;
+        stroke-width: 1px;
+        cursor: move;
+        fill: beige;
+      }
+      
+      .link {
+        fill: none;
+        stroke: #000;
+        stroke-width: 3px;
+        opacity: 0.7;
+        marker-end: url(#end-arrow);
+      }
+      
+      .label {
+        fill: black;
+        font-family: Verdana;
+        font-size: 25px;
+        font-weight: 100;
+        text-anchor: middle;
+        cursor: move;
+      }
+    `);
 
     outer
       .append("rect")
@@ -128,10 +161,10 @@ export class GraphRendererD3 {
     });
 
     this.link
-      .attr("x1", (d) => d.route.sourceIntersection.x)
-      .attr("y1", (d) => d.route.sourceIntersection.y)
-      .attr("x2", (d) => d.route.arrowStart.x)
-      .attr("y2", (d) => d.route.arrowStart.y);
+      .attr("x1", (d) => d.route.sourceIntersection.x.toFixed(1))
+      .attr("y1", (d) => d.route.sourceIntersection.y.toFixed(1))
+      .attr("x2", (d) => d.route.arrowStart.x.toFixed(1))
+      .attr("y2", (d) => d.route.arrowStart.y.toFixed(1));
 
     this.label.each(function eachLabel(d) {
       if (d.hardWidth && d.hardHeight) {
@@ -145,20 +178,23 @@ export class GraphRendererD3 {
     });
 
     this.node
-      .attr("x", (d) => d.innerBounds.x)
-      .attr("y", (d) => d.innerBounds.y)
-      .attr("width", (d) => d.innerBounds.width())
-      .attr("height", (d) => d.innerBounds.height());
+      .attr("x", (d) => d.innerBounds.x.toFixed(1))
+      .attr("y", (d) => d.innerBounds.y.toFixed(1))
+      .attr("width", (d) => d.innerBounds.width().toFixed(1))
+      .attr("height", (d) => d.innerBounds.height().toFixed(1));
 
     this.group
-      .attr("x", (d) => d.bounds.x)
-      .attr("y", (d) => d.bounds.y)
+      .attr("x", (d) => d.bounds.x.toFixed(1))
+      .attr("y", (d) => d.bounds.y.toFixed(1))
       .attr("width", (d) => d.bounds.width())
       .attr("height", (d) => d.bounds.height());
 
     this.label.attr(
       "transform",
-      (d) => `translate(${d.x}${margin},${d.y + margin - d.height / 2})`
+      (d) =>
+        `translate(${d.x.toFixed(1)},${(d.y + margin - d.height / 2).toFixed(
+          1
+        )})`
     );
   }
 }

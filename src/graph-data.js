@@ -7,11 +7,12 @@ export async function loadGraph(dataUrl) {
   graph.nodes = data.nodes.map((x, i) => {
     const node = {
       ...x,
+      id: x.id || x.label,
       index: i,
       width: 50,
       height: 50,
     };
-    nodeLookup[x.id] = node;
+    nodeLookup[node.id] = node;
     return node;
   });
 

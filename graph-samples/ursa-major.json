@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    { "label": "Alkaid" },
+    { "label": "Mizar" },
+    { "label": "Alioth" },
+    { "label": "Megrez" },
+    { "label": "Dubhe" },
+    { "label": "Merak" },
+    { "label": "Phecda" }
+  ],
+  "links": [
+    { "source": "Alkaid", "target": "Mizar" },
+    { "source": "Mizar", "target": "Alioth" },
+    { "source": "Alioth", "target": "Megrez" },
+    { "source": "Megrez", "target": "Dubhe" },
+    { "source": "Dubhe", "target": "Merak" },
+    { "source": "Merak", "target": "Phecda" },
+    { "source": "Phecda", "target": "Megrez" }
+  ],
+  "groups": []
+}
