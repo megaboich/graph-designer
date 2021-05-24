@@ -6,19 +6,12 @@ export default {
   props: {
     graph: Object,
     layoutOptions: Object,
+    graphStructureUpdatesCount: Number,
+    onSelectNode: Function,
   },
   template: `
-    <svg v-once id="svg-main"></svg>
+    <div v-once id="graph-main"></div>
   `,
-  created() {
-    this.$watch(
-      "layoutOptions",
-      () => {
-        this.restartLayout();
-      },
-      { deep: true }
-    );
-  },
   mounted() {
     const { graph } = this;
 
@@ -76,6 +69,16 @@ export default {
         needsUpdate = true;
         layout.resume();
       },
+      onNodeClick: (node) => {
+        this.graph.selectedNodeId = node.id;
+        this.onSelectNode(node);
+        needsUpdate = true;
+      },
+      onBgClick: () => {
+        this.graph.selectedNodeId = undefined;
+        this.onSelectNode(undefined);
+        needsUpdate = true;
+      },
     });
 
     render.update();
@@ -86,5 +89,13 @@ export default {
         render.update();
       }
     }, 20);
+
+    this.$watch("layoutOptions", this.restartLayout, { deep: true });
+    this.$watch("graphStructureUpdatesCount", () => {
+      render.destroyElements();
+      render.setupElements();
+      this.restartLayout();
+      render.update();
+    });
   },
 };

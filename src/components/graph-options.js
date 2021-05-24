@@ -10,7 +10,7 @@ export default {
   render() {
     return html`
       <nav class="panel">
-        <p class="panel-heading is-small">Properties</p>
+        <p class="panel-heading is-small">Graph</p>
         <div class="panel-block">
           <div class="flex-column">
             <div class="field is-horizontal">

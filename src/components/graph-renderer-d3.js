@@ -4,15 +4,21 @@ const margin = 6;
 const pad = 12;
 
 export class GraphRendererD3 {
-  constructor({ graph, onUpdate }) {
+  constructor({ graph, onUpdate, onNodeClick, onBgClick }) {
     this.graph = graph;
     this.onUpdate = onUpdate;
-    this.setup();
+    this.onNodeClick = onNodeClick;
+    this.onBgClick = onBgClick;
+
+    this.setupContainer();
+    this.setupElements();
   }
 
-  setup() {
+  setupContainer() {
     const outer = d3
-      .select("#svg-main")
+      .select("#graph-main")
+      .append("svg")
+      .attr("id", "svg-main")
       .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("pointer-events", "all");
     this.outer = outer;
@@ -27,6 +33,10 @@ export class GraphRendererD3 {
         stroke-width: 1px;
         cursor: move;
         fill: beige;
+      }
+
+      .node[data-selected] {
+        stroke: red;
       }
       
       .link {
@@ -49,6 +59,9 @@ export class GraphRendererD3 {
 
     outer
       .append("rect")
+      .on("mousedown", () => {
+        this.onBgClick();
+      })
       .attr("class", "background")
       .attr("width", "100%")
       .attr("height", "100%");
@@ -68,12 +81,17 @@ export class GraphRendererD3 {
       .attr("stroke-width", "0px")
       .attr("fill", "#000");
 
-    const vis = outer.append("g");
+    this.vis = outer.append("g").attr("id", "vis");
 
     outer.call(
-      d3.zoom().on("zoom", (event) => vis.attr("transform", event.transform))
+      d3
+        .zoom()
+        .on("zoom", (event) => this.vis.attr("transform", event.transform))
     );
+  }
 
+  setupElements() {
+    const { vis } = this;
     const groupsLayer = vis.append("g");
     groupsLayer.attr("pointer-events", "none");
 
@@ -119,6 +137,9 @@ export class GraphRendererD3 {
       .data(this.graph.nodes)
       .enter()
       .append("rect")
+      .on("mousedown", (_, d) => {
+        this.onNodeClick(d);
+      })
       .attr("class", "node")
       .attr("width", (d) => d.width + 2 * pad + 2 * margin)
       .attr("height", (d) => d.height + 2 * pad + 2 * margin)
@@ -142,9 +163,16 @@ export class GraphRendererD3 {
       .data(this.graph.nodes)
       .enter()
       .append("text")
+      .on("mousedown", (_, d) => {
+        this.onNodeClick(d);
+      })
       .attr("class", "label")
       .each(insertLinebreaks)
       .call(dragNode);
+  }
+
+  destroyElements() {
+    this.vis.selectAll("*").remove();
   }
 
   update() {
@@ -178,6 +206,9 @@ export class GraphRendererD3 {
     });
 
     this.node
+      .attr("data-selected", (d) =>
+        d.id === this.graph.selectedNodeId ? true : undefined
+      )
       .attr("x", (d) => d.innerBounds.x.toFixed(1))
       .attr("y", (d) => d.innerBounds.y.toFixed(1))
       .attr("width", (d) => d.innerBounds.width().toFixed(1))

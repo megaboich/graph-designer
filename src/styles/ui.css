@@ -36,8 +36,12 @@ body {
   padding: 16px;
 }
 
-#svg-main {
+#graph-main {
   grid-area: main;
+  width: 100%;
+  height: 100%;
+}
+#svg-main {
   width: 100%;
   height: 100%;
 }

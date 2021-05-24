@@ -1,3 +1,6 @@
+import { getRandomName } from "./helpers/get-random-name.js";
+import { getRandomInt } from "./helpers/misc.js";
+
 export async function loadGraph(dataUrl) {
   const response = await fetch(dataUrl);
   const data = await response.json();
@@ -34,4 +37,28 @@ export async function loadGraph(dataUrl) {
   });
   graph.constraints = [];
   return graph;
+}
+
+export function addNewNode(graph, linkToId) {
+  const node = {
+    id: `node${graph.nodes.length}`,
+    label: getRandomName(),
+    index: graph.nodes.length,
+    width: 50,
+    height: 50,
+  };
+
+  graph.nodes.push(node);
+
+  if (linkToId) {
+    const target = graph.nodes.find((x) => x.id === linkToId);
+    node.x = target.x + getRandomInt(-50, 50);
+    node.y = target.y + getRandomInt(-50, 50);
+    if (target) {
+      graph.links.push({
+        source: node,
+        target,
+      });
+    }
+  }
 }
