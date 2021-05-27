@@ -132,14 +132,17 @@ export class GraphRendererD3 {
         this.onUpdate();
       });
 
+    const onNodeClick = (e, d) => {
+      // console.log("MOUSE", e);
+      this.onNodeClick(d, { shift: e.shiftKey });
+    };
+
     this.node = nodesLayer
       .selectAll(".node")
       .data(this.graph.nodes)
       .enter()
       .append("rect")
-      .on("mousedown", (_, d) => {
-        this.onNodeClick(d);
-      })
+      .on("mousedown", onNodeClick)
       .attr("class", "node")
       .attr("width", (d) => d.width + 2 * pad + 2 * margin)
       .attr("height", (d) => d.height + 2 * pad + 2 * margin)
@@ -163,9 +166,7 @@ export class GraphRendererD3 {
       .data(this.graph.nodes)
       .enter()
       .append("text")
-      .on("mousedown", (_, d) => {
-        this.onNodeClick(d);
-      })
+      .on("mousedown", onNodeClick)
       .attr("class", "label")
       .each(insertLinebreaks)
       .call(dragNode);

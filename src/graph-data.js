@@ -39,11 +39,24 @@ export async function loadGraph(dataUrl) {
   return graph;
 }
 
+function getNewNodeId(graph) {
+  const formatId = (x) => `n${x}`;
+  const idLookup = graph.nodes.reduce((acc, node) => {
+    acc[node.id] = true;
+    return acc;
+  }, {});
+  let inc = graph.nodes.length;
+  while (idLookup[formatId(inc)]) {
+    ++inc;
+  }
+  return formatId(inc);
+}
+
 export function addNewNode(graph, linkToId) {
   const node = {
-    id: `node${graph.nodes.length}`,
-    label: getRandomName(),
     index: graph.nodes.length,
+    id: getNewNodeId(graph),
+    label: getRandomName(),
     width: 50,
     height: 50,
   };
@@ -51,14 +64,69 @@ export function addNewNode(graph, linkToId) {
   graph.nodes.push(node);
 
   if (linkToId) {
-    const target = graph.nodes.find((x) => x.id === linkToId);
-    node.x = target.x + getRandomInt(-50, 50);
-    node.y = target.y + getRandomInt(-50, 50);
-    if (target) {
+    const source = graph.nodes.find((x) => x.id === linkToId);
+    node.x = source.x + getRandomInt(-50, 50);
+    node.y = source.y + getRandomInt(-50, 50);
+    if (source) {
       graph.links.push({
-        source: node,
-        target,
+        source,
+        target: node,
       });
     }
   }
+}
+
+export function deleteNode(graph, nodeId) {
+  // First remove all the links
+  for (let i = 0; i < graph.links.length; ++i) {
+    const link = graph.links[i];
+    if (link.source.id === nodeId || link.target.id === nodeId) {
+      graph.links.splice(i, 1);
+      i--;
+    }
+  }
+  // And remove the node
+  for (let i = 0; i < graph.nodes.length; ++i) {
+    if (graph.nodes[i].id === nodeId) {
+      graph.nodes.splice(i, 1);
+      i--;
+    }
+  }
+}
+
+export function addNewLink(graph, sourceId, targetId) {
+  // Check if this links exists already
+  const existing = graph.links.find(
+    (l) => l.source.id === sourceId && l.target.id === targetId
+  );
+  if (existing) {
+    return false;
+  }
+
+  const source = graph.nodes.find((x) => x.id === sourceId);
+  const target = graph.nodes.find((x) => x.id === targetId);
+  graph.links.push({
+    source,
+    target,
+  });
+  return true;
+}
+
+export function deleteLink(graph, linkToDelete) {
+  for (let i = 0; i < graph.links.length; ++i) {
+    const link = graph.links[i];
+    if (
+      link.source.id === linkToDelete.source.id &&
+      link.target.id === linkToDelete.target.id
+    ) {
+      graph.links.splice(i, 1);
+      i--;
+    }
+  }
+}
+
+export function revertLink(graph, link) {
+  const oldSource = link.source;
+  link.source = link.target;
+  link.target = oldSource;
 }

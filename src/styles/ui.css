@@ -1,4 +1,5 @@
-@import "https://www.unpkg.com/bulma@0.9.2/css/bulma.min.css";
+@import "https://unpkg.com/bulma@0.9.2/css/bulma.min.css";
+@import "https://unpkg.com/@fortawesome/fontawesome-free@5.15.3/css/all.css";
 
 html,
 body {
@@ -63,4 +64,20 @@ body {
 
 .field-label.is-wide-2 {
   flex-grow: 2;
+}
+
+.button.is-slim {
+  height: 1.5em;
+}
+
+.padding-0 {
+  padding: 0;
+}
+
+.padding-05 {
+  padding: 0.5rem;
+}
+
+.level.is-slim {
+  margin-bottom: 0.2rem;
 }

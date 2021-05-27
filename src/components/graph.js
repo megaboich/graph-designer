@@ -8,6 +8,7 @@ export default {
     layoutOptions: Object,
     graphStructureUpdatesCount: Number,
     onSelectNode: Function,
+    selectedNode: Object,
   },
   template: `
     <div v-once id="graph-main"></div>
@@ -69,13 +70,11 @@ export default {
         needsUpdate = true;
         layout.resume();
       },
-      onNodeClick: (node) => {
-        this.graph.selectedNodeId = node.id;
-        this.onSelectNode(node);
+      onNodeClick: (node, flags) => {
+        this.onSelectNode(node, flags);
         needsUpdate = true;
       },
       onBgClick: () => {
-        this.graph.selectedNodeId = undefined;
         this.onSelectNode(undefined);
         needsUpdate = true;
       },
@@ -86,6 +85,7 @@ export default {
     setInterval(() => {
       if (needsUpdate) {
         layout.tick();
+        graph.selectedNodeId = this.selectedNode && this.selectedNode.id;
         render.update();
       }
     }, 20);
@@ -96,6 +96,9 @@ export default {
       render.setupElements();
       this.restartLayout();
       render.update();
+    });
+    this.$watch("selectedNode", () => {
+      needsUpdate = true;
     });
   },
 };
