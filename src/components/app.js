@@ -1,7 +1,8 @@
 import { html } from "../dependencies.js";
 
-import GraphOptions from "./graph-options.js";
-import NodeOptions from "./node-options.js";
+import SectionGraph from "./panel-section-graph.js";
+import SectionNode from "./panel-section-node.js";
+import SectionLinks from "./panel-section-links.js";
 import Graph from "./graph.js";
 import {
   addNewNode,
@@ -39,26 +40,13 @@ export default {
         </a>
       </div>
       <div id="left-panel">
-        <${GraphOptions} layoutOptions=${this.layoutOptions} />
+        <${SectionGraph} layoutOptions=${this.layoutOptions} />
         ${this.selectedNode &&
         html`
-          <${NodeOptions}
+          <${SectionNode}
             graph=${this.graph}
             node=${this.selectedNode}
             onChange=${() => {
-              this.graphStructureUpdatesCount++;
-            }}
-            onNavigate=${({ node }) => {
-              if (node) {
-                this.selectedNode = node;
-              }
-            }}
-            onDeleteLink=${(link) => {
-              deleteLink(this.graph, link);
-              this.graphStructureUpdatesCount++;
-            }}
-            onRevertLink=${(link) => {
-              revertLink(this.graph, link);
               this.graphStructureUpdatesCount++;
             }}
           />
@@ -87,13 +75,33 @@ export default {
             </button>
           `}
         </div>
+        ${this.selectedNode &&
+        html`
+          <${SectionLinks}
+            graph=${this.graph}
+            node=${this.selectedNode}
+            onNavigate=${({ node }) => {
+              if (node) {
+                this.selectedNode = node;
+              }
+            }}
+            onDeleteLink=${(link) => {
+              deleteLink(this.graph, link);
+              this.graphStructureUpdatesCount++;
+            }}
+            onRevertLink=${(link) => {
+              revertLink(this.graph, link);
+              this.graphStructureUpdatesCount++;
+            }}
+          />
+        `}
       </div>
       <${Graph}
         graph=${this.graph}
         graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
         layoutOptions=${this.layoutOptions}
         selectedNode=${this.selectedNode}
-        onSelectNode=${(node, flags) => {
+        onNodeClick=${(node, flags) => {
           if (
             this.selectedNode &&
             node &&
@@ -107,6 +115,17 @@ export default {
 
           console.log("Selected node", node, this.graph);
           this.selectedNode = node;
+        }}
+        onBgClick=${(flags) => {
+          if (flags.shift) {
+            addNewNode(this.graph, this.selectedNode && this.selectedNode.id, {
+              x: flags.x,
+              y: flags.y,
+            });
+            this.graphStructureUpdatesCount++;
+          } else {
+            this.selectedNode = undefined;
+          }
         }}
       />
     `;

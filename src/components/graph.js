@@ -7,7 +7,8 @@ export default {
     graph: Object,
     layoutOptions: Object,
     graphStructureUpdatesCount: Number,
-    onSelectNode: Function,
+    onNodeClick: Function,
+    onBgClick: Function,
     selectedNode: Object,
   },
   template: `
@@ -19,7 +20,7 @@ export default {
     let needsUpdate = false;
     let layout;
 
-    this.initializeLayout = () => {
+    this.initializeLayout = (iterations = 30) => {
       const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
       layout = new cola.Layout()
         .nodes(graph.nodes)
@@ -44,7 +45,8 @@ export default {
       }
 
       layout.kick = () => {};
-      layout.start(0, 0, 30);
+      console.log("restart", iterations);
+      layout.start(0, 0, iterations);
       layout.tick();
     };
 
@@ -54,7 +56,7 @@ export default {
         node.fixed |= 2;
       });
 
-      this.initializeLayout();
+      this.initializeLayout(0);
 
       graph.nodes.forEach((node) => {
         // eslint-disable-next-line no-bitwise
@@ -71,11 +73,11 @@ export default {
         layout.resume();
       },
       onNodeClick: (node, flags) => {
-        this.onSelectNode(node, flags);
+        this.onNodeClick(node, flags);
         needsUpdate = true;
       },
-      onBgClick: () => {
-        this.onSelectNode(undefined);
+      onBgClick: (flags) => {
+        this.onBgClick(flags);
         needsUpdate = true;
       },
     });

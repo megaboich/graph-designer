@@ -3,7 +3,6 @@ import { html } from "../dependencies.js";
 import Select from "./select.js";
 
 export default {
-  name: "GraphOptions",
   props: {
     layoutOptions: Object,
   },

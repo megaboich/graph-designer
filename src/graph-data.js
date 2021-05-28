@@ -52,13 +52,14 @@ function getNewNodeId(graph) {
   return formatId(inc);
 }
 
-export function addNewNode(graph, linkToId) {
+export function addNewNode(graph, linkToId, attrs = {}) {
   const node = {
     index: graph.nodes.length,
     id: getNewNodeId(graph),
     label: getRandomName(),
     width: 50,
     height: 50,
+    ...attrs,
   };
 
   graph.nodes.push(node);

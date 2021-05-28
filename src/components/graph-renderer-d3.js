@@ -9,6 +9,7 @@ export class GraphRendererD3 {
     this.onUpdate = onUpdate;
     this.onNodeClick = onNodeClick;
     this.onBgClick = onBgClick;
+    this.transform = { x: 0, y: 0, k: 1 };
 
     this.setupContainer();
     this.setupElements();
@@ -38,6 +39,10 @@ export class GraphRendererD3 {
       .node[data-selected] {
         stroke: red;
       }
+
+      .node[data-fixed] {
+        fill: pink;
+      }
       
       .link {
         fill: none;
@@ -59,8 +64,12 @@ export class GraphRendererD3 {
 
     outer
       .append("rect")
-      .on("mousedown", () => {
-        this.onBgClick();
+      .on("mousedown", (e) => {
+        this.onBgClick({
+          shift: e.shiftKey,
+          x: (e.offsetX - this.transform.x) / this.transform.k,
+          y: (e.offsetY - this.transform.y) / this.transform.k,
+        });
       })
       .attr("class", "background")
       .attr("width", "100%")
@@ -84,9 +93,14 @@ export class GraphRendererD3 {
     this.vis = outer.append("g").attr("id", "vis");
 
     outer.call(
-      d3
-        .zoom()
-        .on("zoom", (event) => this.vis.attr("transform", event.transform))
+      d3.zoom().on("zoom", (event) => {
+        const t = event.transform;
+        this.transform = t;
+        const svgTrans = `translate(${t.x.toFixed(1)},${t.y.toFixed(
+          1
+        )}) scale(${t.k.toFixed(3)})`;
+        this.vis.attr("transform", svgTrans);
+      })
     );
   }
 
@@ -96,6 +110,7 @@ export class GraphRendererD3 {
     groupsLayer.attr("pointer-events", "none");
 
     const nodesLayer = vis.append("g");
+    this.nodesLayer = nodesLayer;
     const linksLayer = vis.append("g");
 
     this.group = groupsLayer
@@ -210,6 +225,7 @@ export class GraphRendererD3 {
       .attr("data-selected", (d) =>
         d.id === this.graph.selectedNodeId ? true : undefined
       )
+      .attr("data-fixed", (d) => (d.fixed ? true : undefined))
       .attr("x", (d) => d.innerBounds.x.toFixed(1))
       .attr("y", (d) => d.innerBounds.y.toFixed(1))
       .attr("width", (d) => d.innerBounds.width().toFixed(1))
