@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { html } from "../dependencies.js";
 
 import SectionGraph from "./panel-section-graph.js";
@@ -113,6 +114,7 @@ export default {
             }
           }
 
+          // eslint-disable-next-line no-console
           console.log("Selected node", node, this.graph);
           this.selectedNode = node;
         }}

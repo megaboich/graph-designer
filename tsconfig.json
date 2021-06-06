@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    // Target latest version of ECMAScript.
+    "target": "esnext",
+
+    // Process & infer types from .js files.
+    "allowJs": true,
+
+    // Enable error reporting in type-checked JavaScript files.
+    "checkJs": true,
+
+    // Don't emit; it is a JavaScript already
+    "noEmit": true,
+
+    // Yes, we want to be strict
+    "strict": true,
+  },
+}

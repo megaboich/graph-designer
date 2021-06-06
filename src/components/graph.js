@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { GraphRendererD3 } from "./graph-renderer-d3.js";
 import { cola } from "../dependencies.js";
 
@@ -45,7 +46,6 @@ export default {
       }
 
       layout.kick = () => {};
-      console.log("restart", iterations);
       layout.start(0, 0, iterations);
       layout.tick();
     };

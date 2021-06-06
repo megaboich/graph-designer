@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { html } from "../dependencies.js";
 
 import Select from "./select.js";

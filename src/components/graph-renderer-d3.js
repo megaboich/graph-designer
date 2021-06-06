@@ -4,6 +4,13 @@ const margin = 6;
 const pad = 12;
 
 export class GraphRendererD3 {
+  /**
+   * @param {Object} param0
+   * @param {GraphData} param0.graph
+   * @param {Function} param0.onUpdate
+   * @param {Function} param0.onNodeClick
+   * @param {Function} param0.onBgClick
+   */
   constructor({ graph, onUpdate, onNodeClick, onBgClick }) {
     this.graph = graph;
     this.onUpdate = onUpdate;
@@ -64,7 +71,7 @@ export class GraphRendererD3 {
 
     outer
       .append("rect")
-      .on("mousedown", (e) => {
+      .on("mousedown", (/** @type {MouseEvent} */ e) => {
         this.onBgClick({
           shift: e.shiftKey,
           x: (e.offsetX - this.transform.x) / this.transform.k,
@@ -92,20 +99,27 @@ export class GraphRendererD3 {
 
     this.vis = outer.append("g").attr("id", "vis");
 
-    outer.call(
-      d3.zoom().on("zoom", (event) => {
-        const t = event.transform;
-        this.transform = t;
-        const svgTrans = `translate(${t.x.toFixed(1)},${t.y.toFixed(
-          1
-        )}) scale(${t.k.toFixed(3)})`;
+    const zoomHandler = (/** @type {any} */ event) => {
+      const t = event.transform;
+      this.transform = t;
+      const dx = t.x.toFixed(1);
+      const dy = t.y.toFixed(1);
+      const dz = t.k.toFixed(3);
+      const svgTrans = `translate(${dx},${dy}) scale(${dz})`;
+      if (this.vis) {
         this.vis.attr("transform", svgTrans);
-      })
-    );
+      }
+    };
+
+    // @ts-ignore
+    outer.call(d3.zoom().on("zoom", zoomHandler));
   }
 
   setupElements() {
     const { vis } = this;
+    if (!vis) {
+      return;
+    }
     const groupsLayer = vis.append("g");
     groupsLayer.attr("pointer-events", "none");
 
@@ -147,7 +161,10 @@ export class GraphRendererD3 {
         this.onUpdate();
       });
 
-    const onNodeClick = (e, d) => {
+    const onNodeClick = (
+      /** @type MouseEvent */ e,
+      /** @type GraphNode */ d
+    ) => {
       // console.log("MOUSE", e);
       this.onNodeClick(d, { shift: e.shiftKey });
     };
@@ -159,12 +176,19 @@ export class GraphRendererD3 {
       .append("rect")
       .on("mousedown", onNodeClick)
       .attr("class", "node")
-      .attr("width", (d) => d.width + 2 * pad + 2 * margin)
-      .attr("height", (d) => d.height + 2 * pad + 2 * margin)
-      .attr("rx", (d) => d.rx)
-      .attr("ry", (d) => d.rx)
+      .attr("width", (d) => (d.width ? d.width + 2 * pad + 2 * margin : null))
+      .attr("height", (d) =>
+        d.height ? d.height + 2 * pad + 2 * margin : null
+      )
+      .attr("rx", (d) => d.rx || null)
+      .attr("ry", (d) => d.rx || null)
+      // @ts-ignore
       .call(dragNode);
 
+    /**
+     * @this {SVGElement}
+     * @param {GraphNode} d
+     */
     function insertLinebreaks(d) {
       const el = d3.select(this);
       const words = d.label.split(" ");
@@ -184,19 +208,27 @@ export class GraphRendererD3 {
       .on("mousedown", onNodeClick)
       .attr("class", "label")
       .each(insertLinebreaks)
+      // @ts-ignore
       .call(dragNode);
   }
 
   destroyElements() {
-    this.vis.selectAll("*").remove();
+    if (this.vis) {
+      this.vis.selectAll("*").remove();
+    }
   }
 
   update() {
-    this.node.each((d) => {
+    const { node, link, label, group } = this;
+    if (!node || !link || !label || !group) {
+      return;
+    }
+
+    node.each((d) => {
       d.innerBounds = d.bounds.inflate(-margin);
     });
 
-    this.link.each((d) => {
+    link.each((d) => {
       d.route = cola.makeEdgeBetween(
         d.source.innerBounds,
         d.target.innerBounds,
@@ -204,13 +236,13 @@ export class GraphRendererD3 {
       );
     });
 
-    this.link
+    link
       .attr("x1", (d) => d.route.sourceIntersection.x.toFixed(1))
       .attr("y1", (d) => d.route.sourceIntersection.y.toFixed(1))
       .attr("x2", (d) => d.route.arrowStart.x.toFixed(1))
       .attr("y2", (d) => d.route.arrowStart.y.toFixed(1));
 
-    this.label.each(function eachLabel(d) {
+    label.each(function eachLabel(d) {
       if (d.hardWidth && d.hardHeight) {
         d.width = d.hardWidth;
         d.height = d.hardHeight;
@@ -221,28 +253,33 @@ export class GraphRendererD3 {
       }
     });
 
-    this.node
+    node
       .attr("data-selected", (d) =>
-        d.id === this.graph.selectedNodeId ? true : undefined
+        d.id === this.graph.selectedNodeId ? true : null
       )
-      .attr("data-fixed", (d) => (d.fixed ? true : undefined))
+      .attr("data-fixed", (d) => (d.fixed ? true : null))
       .attr("x", (d) => d.innerBounds.x.toFixed(1))
       .attr("y", (d) => d.innerBounds.y.toFixed(1))
       .attr("width", (d) => d.innerBounds.width().toFixed(1))
       .attr("height", (d) => d.innerBounds.height().toFixed(1));
 
-    this.group
+    group
       .attr("x", (d) => d.bounds.x.toFixed(1))
       .attr("y", (d) => d.bounds.y.toFixed(1))
       .attr("width", (d) => d.bounds.width())
       .attr("height", (d) => d.bounds.height());
 
-    this.label.attr(
-      "transform",
-      (d) =>
-        `translate(${d.x.toFixed(1)},${(d.y + margin - d.height / 2).toFixed(
-          1
-        )})`
-    );
+    label.attr("transform", (d) => {
+      const { x, y, height } = d;
+      if (
+        typeof x === "undefined" ||
+        typeof y === "undefined" ||
+        typeof height === "undefined"
+      ) {
+        return null;
+      }
+      const ty = y + margin - height / 2;
+      return `translate(${x.toFixed(1)},${ty.toFixed(1)})`;
+    });
   }
 }

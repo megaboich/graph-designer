@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { html } from "../dependencies.js";
 
 export default {
