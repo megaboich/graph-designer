@@ -1,5 +1,5 @@
 /**
- * @typedef GraphNode
+ * @typedef {object} GraphNode
  * @property id {string}
  * @property label {string}
  * @property index {number}
@@ -17,7 +17,7 @@
  */
 
 /**
- * @typedef GraphGroup
+ * @typedef {object} GraphGroup
  * @property leaves {Array<GraphNode>}
  * @property style {string}
  * @property padding {any}
@@ -25,14 +25,14 @@
  */
 
 /**
- * @typedef GraphLink
+ * @typedef {object} GraphLink
  * @property source {GraphNode}
  * @property target {GraphNode}
  * @property route {any=}
  */
 
 /**
- * @typedef GraphData
+ * @typedef {object} GraphData
  * @property nodes {Array<GraphNode>}
  * @property links {Array<GraphLink>}
  * @property groups {Array<GraphGroup>}
@@ -41,7 +41,7 @@
  */
 
 /**
- * @typedef GraphSerializedNode
+ * @typedef {object} GraphSerializedNode
  * @property id {string}
  * @property label {string}
  * @property width {number}
@@ -49,21 +49,33 @@
  */
 
 /**
- * @typedef GraphSerializedLink
+ * @typedef {object} GraphSerializedLink
  * @property source {string}
  * @property target {string}
  */
 
 /**
- * @typedef GraphSerializedGroup
+ * @typedef {object} GraphSerializedGroup
  * @property members {Array<string>}
  * @property style {string}
  * @property padding {any}
  */
 
 /**
- * @typedef GraphSerializedData
+ * @typedef {object} GraphSerializedData
  * @property nodes {Array<GraphSerializedNode>}
  * @property links {Array<GraphSerializedLink>}
  * @property groups {Array<GraphSerializedGroup>}
+ */
+
+/**
+ * @typedef {object} GraphLayoutOptions
+ * @property layoutType {string}
+ * @property linkDistance {number}
+ * @property minSeparation {number}
+ */
+
+/**
+ * @typedef {object} HTMLInputEvent
+ * @property target {HTMLInputElement}
  */

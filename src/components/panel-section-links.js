@@ -31,7 +31,7 @@ export default {
                               <button
                                 class="button is-ghost is-slim padding-0"
                                 onclick=${() => {
-                                  this.onNavigate({ node: l.source });
+                                  this.onNavigate(l.source);
                                 }}
                               >
                                 ${l.source.label}
@@ -44,7 +44,7 @@ export default {
                               <button
                                 class="button is-ghost is-slim padding-0"
                                 onclick=${() => {
-                                  this.onNavigate({ node: l.target });
+                                  this.onNavigate(l.target);
                                 }}
                               >
                                 ${l.target.label}

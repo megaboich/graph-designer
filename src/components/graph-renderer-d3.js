@@ -3,13 +3,26 @@ import { cola, d3 } from "../dependencies.js";
 const margin = 6;
 const pad = 12;
 
+/**
+ * @callback GraphNodeClick
+ * @param {GraphNode} node
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+
+/**
+ * @callback GraphBgClick
+ * @param {{x:number, y:number, event:MouseEvent}} flags
+ * @returns {void}
+ */
+
 export class GraphRendererD3 {
   /**
    * @param {Object} param0
    * @param {GraphData} param0.graph
    * @param {Function} param0.onUpdate
-   * @param {Function} param0.onNodeClick
-   * @param {Function} param0.onBgClick
+   * @param {GraphNodeClick} param0.onNodeClick
+   * @param {GraphBgClick} param0.onBgClick
    */
   constructor({ graph, onUpdate, onNodeClick, onBgClick }) {
     this.graph = graph;
@@ -73,7 +86,7 @@ export class GraphRendererD3 {
       .append("rect")
       .on("mousedown", (/** @type {MouseEvent} */ e) => {
         this.onBgClick({
-          shift: e.shiftKey,
+          event: e,
           x: (e.offsetX - this.transform.x) / this.transform.k,
           y: (e.offsetY - this.transform.y) / this.transform.k,
         });
@@ -166,7 +179,7 @@ export class GraphRendererD3 {
       /** @type GraphNode */ d
     ) => {
       // console.log("MOUSE", e);
-      this.onNodeClick(d, { shift: e.shiftKey });
+      this.onNodeClick(d, e);
     };
 
     this.node = nodesLayer

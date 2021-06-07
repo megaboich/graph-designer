@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { html } from "../dependencies.js";
+import { html, defineComponent } from "../dependencies.js";
 
 import SectionGraph from "./panel-section-graph.js";
 import SectionNode from "./panel-section-node.js";
@@ -13,15 +12,17 @@ import {
   revertLink,
 } from "../graph-data.js";
 
-export default {
+export default defineComponent({
   name: "App",
   data() {
     return {
+      /** @type {GraphLayoutOptions} */
       layoutOptions: {
         layoutType: "auto",
         linkDistance: 80,
         minSeparation: 160,
       },
+      /** @type {GraphNode=} */
       selectedNode: undefined,
       graphStructureUpdatesCount: 0,
     };
@@ -30,6 +31,15 @@ export default {
     graph: Object,
   },
   render() {
+    /**
+     * @typedef {object} DestructuredThis
+     * @property {GraphData} graph
+     */
+    /** @type {DestructuredThis} */ // @ts-ignore
+    const { graph } = this;
+
+    const { layoutOptions, selectedNode } = this;
+
     return html`
       <div id="top-panel">
         <p>Power graph designer</p>
@@ -41,12 +51,12 @@ export default {
         </a>
       </div>
       <div id="left-panel">
-        <${SectionGraph} layoutOptions=${this.layoutOptions} />
-        ${this.selectedNode &&
+        <${SectionGraph} layoutOptions=${layoutOptions} />
+        ${selectedNode &&
         html`
           <${SectionNode}
-            graph=${this.graph}
-            node=${this.selectedNode}
+            graph=${graph}
+            node=${selectedNode}
             onChange=${() => {
               this.graphStructureUpdatesCount++;
             }}
@@ -56,18 +66,18 @@ export default {
           <button
             class="button is-primary"
             onclick=${() => {
-              addNewNode(this.graph, this.selectedNode && this.selectedNode.id);
+              addNewNode(graph, selectedNode && selectedNode.id);
               this.graphStructureUpdatesCount++;
             }}
           >
             Add node
           </button>
-          ${this.selectedNode &&
+          ${selectedNode &&
           html`
             <button
               class="button is-danger"
               onclick=${() => {
-                deleteNode(this.graph, this.selectedNode.id);
+                deleteNode(graph, selectedNode && selectedNode.id);
                 this.selectedNode = undefined;
                 this.graphStructureUpdatesCount++;
               }}
@@ -76,53 +86,58 @@ export default {
             </button>
           `}
         </div>
-        ${this.selectedNode &&
+        ${selectedNode &&
         html`
           <${SectionLinks}
-            graph=${this.graph}
-            node=${this.selectedNode}
-            onNavigate=${({ node }) => {
+            graph=${graph}
+            node=${selectedNode}
+            onNavigate=${(/** @type GraphNode */ node) => {
               if (node) {
                 this.selectedNode = node;
               }
             }}
-            onDeleteLink=${(link) => {
-              deleteLink(this.graph, link);
+            onDeleteLink=${(/** @type GraphLink */ link) => {
+              deleteLink(graph, link);
               this.graphStructureUpdatesCount++;
             }}
-            onRevertLink=${(link) => {
-              revertLink(this.graph, link);
+            onRevertLink=${(/** @type GraphLink */ link) => {
+              revertLink(graph, link);
               this.graphStructureUpdatesCount++;
             }}
           />
         `}
       </div>
       <${Graph}
-        graph=${this.graph}
+        graph=${graph}
         graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
-        layoutOptions=${this.layoutOptions}
-        selectedNode=${this.selectedNode}
-        onNodeClick=${(node, flags) => {
+        layoutOptions=${layoutOptions}
+        selectedNode=${selectedNode}
+        onNodeClick=${(
+          /** @type {GraphNode} */ node,
+          /** @type {MouseEvent} */ event
+        ) => {
           if (
-            this.selectedNode &&
+            selectedNode &&
             node &&
-            flags.shift &&
-            this.selectedNode.id !== node.id
+            event.shiftKey &&
+            selectedNode.id !== node.id
           ) {
-            if (addNewLink(this.graph, this.selectedNode.id, node.id)) {
+            if (addNewLink(graph, selectedNode.id, node.id)) {
               this.graphStructureUpdatesCount++;
             }
           }
 
           // eslint-disable-next-line no-console
-          console.log("Selected node", node, this.graph);
+          console.log("Selected node", node, graph);
           this.selectedNode = node;
         }}
-        onBgClick=${(flags) => {
-          if (flags.shift) {
-            addNewNode(this.graph, this.selectedNode && this.selectedNode.id, {
-              x: flags.x,
-              y: flags.y,
+        onBgClick=${(
+          /** @type {{x: number, y: number, event: MouseEvent}} */ params
+        ) => {
+          if (params.event.shiftKey) {
+            addNewNode(graph, selectedNode && selectedNode.id, {
+              x: params.x,
+              y: params.y,
             });
             this.graphStructureUpdatesCount++;
           } else {
@@ -132,4 +147,4 @@ export default {
       />
     `;
   },
-};
+});

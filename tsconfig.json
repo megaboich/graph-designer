@@ -14,5 +14,7 @@
 
     // Yes, we want to be strict
     "strict": true,
+
+    "moduleResolution": "node"
   },
 }

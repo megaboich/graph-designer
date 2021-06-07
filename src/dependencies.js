@@ -1,6 +1,9 @@
 // @ts-nocheck
 
-import * as Vue from "https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.js";
+import {
+  createApp,
+  defineComponent as VueDefineComponent,
+} from "https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.js";
 import { h } from "https://unpkg.com/vue@3.0.11/dist/vue.runtime.esm-browser.js";
 import htm from "https://unpkg.com/htm@3.0.4/dist/htm.module.js?module";
 
@@ -10,15 +13,11 @@ import "https://unpkg.com/d3-zoom@2.0.0/dist/d3-zoom.js";
 
 import * as cola from "./lib/cola.esm.js";
 
-/**
- * @callback VueRenderFunction
- * @param {...any} params
- * @returns {any} virtual dom object
- */
-
-/** @type VueRenderFunction */
 const html = htm.bind(h);
 
-const { /** @type {d3} */ d3 } = window;
+const { d3 } = window;
 
-export { Vue, html, d3, cola };
+/** @type { import("vue").defineComponent } */
+const defineComponent = VueDefineComponent;
+
+export { createApp, defineComponent, html, /** @type {d3} */ d3, cola };

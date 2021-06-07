@@ -77,7 +77,7 @@ function getNewNodeId(graph) {
 /**
  * Adds new node to graph
  * @param {GraphData} graph
- * @param {string} linkToId
+ * @param {string=} linkToId
  * @param {any} attrs
  */
 export function addNewNode(graph, linkToId, attrs = {}) {
@@ -116,7 +116,7 @@ export function addNewNode(graph, linkToId, attrs = {}) {
 /**
  * Deletes node and connected links from the graph
  * @param {GraphData} graph
- * @param {string} nodeId
+ * @param {string=} nodeId
  */
 export function deleteNode(graph, nodeId) {
   // First remove all the links

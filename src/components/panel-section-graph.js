@@ -1,13 +1,19 @@
-// @ts-nocheck
-import { html } from "../dependencies.js";
+import { html, defineComponent } from "../dependencies.js";
 
 import Select from "./select.js";
 
-export default {
+export default defineComponent({
   props: {
     layoutOptions: Object,
   },
   render() {
+    /**
+     * @typedef {object} DestructuredThis
+     * @property {GraphLayoutOptions} layoutOptions
+     */
+    /** @type {DestructuredThis} */ // @ts-ignore
+    const { layoutOptions } = this;
+
     return html`
       <nav class="panel">
         <p class="panel-heading is-small">Graph</p>
@@ -22,15 +28,15 @@ export default {
                   <div class="control">
                     <div class="select">
                       <${Select}
-                        value=${this.layoutOptions.layoutType}
+                        value=${layoutOptions.layoutType}
                         options=${[
                           { value: "auto", text: "Auto" },
                           { value: "disabled", text: "Disabled" },
                           { value: "flow-x", text: "Flow left to right" },
                           { value: "flow-y", text: "Flow top to bottom" },
                         ]}
-                        onchange=${(val) => {
-                          this.layoutOptions.layoutType = val;
+                        onchange=${(/** @type {string} */ val) => {
+                          layoutOptions.layoutType = val;
                         }}
                       />
                     </div>
@@ -38,8 +44,8 @@ export default {
                 </div>
               </div>
             </div>
-            ${(this.layoutOptions.layoutType === "flow-x" ||
-              this.layoutOptions.layoutType === "flow-y") &&
+            ${(layoutOptions.layoutType === "flow-x" ||
+              layoutOptions.layoutType === "flow-y") &&
             html`
               <div class="field is-horizontal">
                 <div class="field-label is-small is-wide-2">
@@ -57,9 +63,9 @@ export default {
                         class="input"
                         type="number"
                         min="10"
-                        value=${this.layoutOptions.minSeparation}
-                        oninput=${(e) => {
-                          this.layoutOptions.minSeparation = parseInt(
+                        value=${layoutOptions.minSeparation}
+                        oninput=${(/** @type {HTMLInputEvent} */ e) => {
+                          layoutOptions.minSeparation = parseInt(
                             e.target.value,
                             10
                           );
@@ -81,9 +87,9 @@ export default {
                       class="input"
                       type="number"
                       min="10"
-                      value=${this.layoutOptions.linkDistance}
-                      oninput=${(e) => {
-                        this.layoutOptions.linkDistance = parseInt(
+                      value=${layoutOptions.linkDistance}
+                      oninput=${(/** @type {HTMLInputEvent} */ e) => {
+                        layoutOptions.linkDistance = parseInt(
                           e.target.value,
                           10
                         );
@@ -98,4 +104,4 @@ export default {
       </nav>
     `;
   },
-};
+});
