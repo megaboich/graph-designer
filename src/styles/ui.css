@@ -10,7 +10,7 @@ body {
   overflow: hidden;
 }
 
-body {
+.graph-editor {
   height: 100vh;
   width: 100vw;
   display: grid;
@@ -71,20 +71,3 @@ body {
 .button.is-slim {
   height: 1.5em;
 }
-
-.level.is-slim {
-  margin-bottom: 0.2rem;
-}
-
-.padding-0 {
-  padding: 0;
-}
-
-.padding-m {
-  padding: 0.5rem;
-}
-
-.margin-right-s {
-  margin-right: 0.25rem;
-}
-

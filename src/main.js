@@ -1,15 +1,57 @@
-import App from "./components/app.js";
-import { loadGraph } from "./graph-data.js";
+import GraphEditor from "./components/graph-editor.js";
+import Gallery from "./components/gallery.js";
+
 import { createApp, html } from "./dependencies.js";
 
-async function initApp() {
-  const graph = await loadGraph("graph-samples/ursa-major.json");
+/**
+ * @typedef {object} MainComponent
+ * -- state
+ * @property route {String}
+ * -- methods
+ * @property handleWindowHashChange {()=>void}
+ */
 
-  const app = createApp({
-    render: () => html`
-      <${App} graph=${graph} />
-    `,
-  });
+const rootComponent = {
+  data() {
+    return {
+      route: "",
+    };
+  },
+
+  methods: {
+    /**
+     * @this {MainComponent}
+     */
+    handleWindowHashChange() {
+      this.route = window.location.hash ? window.location.hash.substr(1) : "";
+    },
+  },
+
+  /**
+   * @this {MainComponent}
+   */
+  async mounted() {
+    window.addEventListener("hashchange", this.handleWindowHashChange);
+    this.handleWindowHashChange();
+  },
+
+  /**
+   * @this {MainComponent}
+   */
+  render() {
+    if (!this.route) {
+      return html`
+        <${Gallery} />
+      `;
+    }
+    return html`
+      <${GraphEditor} route=${this.route} />
+    `;
+  },
+};
+
+async function initApp() {
+  const app = createApp(rootComponent);
   app.mount(document.body);
 }
 

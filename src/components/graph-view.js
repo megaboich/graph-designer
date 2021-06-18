@@ -2,7 +2,7 @@ import { GraphRendererD3 } from "./graph-renderer-d3.js";
 import { cola } from "../dependencies.js";
 
 /**
- * @typedef {object} GraphComponent
+ * @typedef {object} GraphView
  * -- props
  * @property graph {GraphData}
  * @property layoutOptions {GraphLayoutOptions}
@@ -14,7 +14,7 @@ import { cola } from "../dependencies.js";
  * @property initializeLayout {(iterations?: number)=>void}
  * @property restartLayout {()=>void}
  *
- * @typedef {GraphComponent & VueComponent} GraphVueComponent
+ * @typedef {GraphView & VueComponent} GraphViewVue
  */
 
 export default {
@@ -32,7 +32,7 @@ export default {
   `,
 
   /**
-   * @this {GraphVueComponent}
+   * @this {GraphViewVue}
    */
   mounted() {
     const { graph } = this;

@@ -21,9 +21,9 @@ function renderLinkNavigation(link, nodeId) {
     <div class="level-item">
       ${link.source.id === nodeId
         ? html`
-            <span class="margin-right-s">to</span>
+            <span class="mr-1">to</span>
             <button
-              class="button is-ghost is-slim padding-0"
+              class="button is-ghost is-slim p-0"
               onclick=${() => {
                 this.onNavigate(link.target);
               }}
@@ -32,9 +32,9 @@ function renderLinkNavigation(link, nodeId) {
             </button>
           `
         : html`
-            <span class="margin-right-s">from</span>
+            <span class="mr-1">from</span>
             <button
-              class="button is-ghost is-slim padding-0"
+              class="button is-ghost is-slim p-0"
               onclick=${() => {
                 this.onNavigate(link.source);
               }}
@@ -54,7 +54,7 @@ function renderLinkNavigation(link, nodeId) {
  */
 function renderLink(link, nodeId) {
   return html`
-    <div class="level is-slim">
+    <div class="level mb-1">
       <div class="level-left">
         ${renderLinkNavigation.call(this, link, nodeId)}
       </div>
@@ -62,7 +62,7 @@ function renderLink(link, nodeId) {
         <div class="level-item buttons">
           <button
             title="Change direction"
-            class="button is-info is-slim padding-m"
+            class="button is-info is-slim p-2"
             onclick=${() => {
               this.onRevertLink(link);
             }}
@@ -73,7 +73,7 @@ function renderLink(link, nodeId) {
           </button>
           <button
             title="Delete link"
-            class="button is-danger is-slim padding-m"
+            class="button is-danger is-slim p-2"
             onclick=${() => {
               this.onDeleteLink(link);
             }}
