@@ -18,7 +18,7 @@
 
 /**
  * @typedef {object} GraphGroup
- * @property leaves {Array<GraphNode>}
+ * @property leaves {Array<Number>}
  * @property style {string}
  * @property padding {any}
  * @property bounds {any=}

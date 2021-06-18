@@ -39,7 +39,7 @@ export async function loadGraph(dataUrl) {
 
   graph.groups = data.groups.map((x) => {
     const group = {
-      leaves: x.members.map((id) => nodeLookup[id]),
+      leaves: x.members.map((id) => nodeLookup[id].index),
       style: x.style,
       padding: x.padding,
     };

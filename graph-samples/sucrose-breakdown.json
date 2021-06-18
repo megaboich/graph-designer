@@ -1,12 +1,7 @@
 {
   "nodes": [
     { "id": "node1", "label": "P" },
-    {
-      "id": "node2",
-      "label": "sucrose phosphate phosphatase",
-      "hardWidth": "300",
-      "hardHeight": "200"
-    },
+    { "id": "node2", "label": "sucrose phosphate phosphatase" },
     { "id": "node4", "label": "sucrose 6-phosphate" },
     { "id": "node6", "label": "sucrose" },
     { "id": "node8", "label": "invertase" },
@@ -115,7 +110,7 @@
   ],
   "groups": [
     {
-      "style": "fill: #ffdd3c; fill-opacity: 0.3; stroke: #ffdd3c; stroke-opacity: 1",
+      "style": "fill: #ffdd3c; fill-opacity: 0.3;",
       "padding": 10,
       "members": [
         "node102",
@@ -149,7 +144,7 @@
       ]
     },
     {
-      "style": "fill: #4db987; fill-opacity: 0.3; stroke: #4db987; stroke-opacity: 1",
+      "style": "fill: #4db987; fill-opacity: 0.3;",
       "padding": 10,
       "members": [
         "node95",
@@ -170,7 +165,7 @@
       ]
     },
     {
-      "style": "fill: #ffdd3c; fill-opacity: 0.3; stroke: #ffdd3c; stroke-opacity: 1",
+      "style": "fill: #ff00ff; fill-opacity: 0.3;",
       "padding": 10,
       "members": ["node184", "node189", "node158"]
     }
