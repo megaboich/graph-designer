@@ -6,6 +6,7 @@ module.exports = {
     "import/prefer-default-export": "off",
     "no-plusplus": "off",
     "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
   },
   env: {
     browser: true,

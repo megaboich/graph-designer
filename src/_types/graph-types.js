@@ -13,7 +13,7 @@
  * @property bounds {any=}
  * @property hardWidth {number=}
  * @property hardHeight {number=}
- * @property fixed {boolean=}
+ * @property fixed {number=}
  */
 
 /**
@@ -73,9 +73,4 @@
  * @property layoutType {string}
  * @property linkDistance {number}
  * @property minSeparation {number}
- */
-
-/**
- * @typedef {object} HTMLInputEvent
- * @property target {HTMLInputElement}
  */

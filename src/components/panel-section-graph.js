@@ -1,17 +1,22 @@
-import { html, defineComponent } from "../dependencies.js";
-
+import { html } from "../dependencies.js";
 import Select from "./select.js";
 
-export default defineComponent({
+/**
+ * @typedef {object} PanelSectionGraph
+ * -- props
+ * @property layoutOptions {GraphLayoutOptions}
+ */
+
+export default {
   props: {
     layoutOptions: Object,
   },
+
+  /**
+   * @this {PanelSectionGraph}
+   * @returns {any} html
+   */
   render() {
-    /**
-     * @typedef {object} DestructuredThis
-     * @property {GraphLayoutOptions} layoutOptions
-     */
-    /** @type {DestructuredThis} */ // @ts-ignore
     const { layoutOptions } = this;
 
     return html`
@@ -104,4 +109,4 @@ export default defineComponent({
       </nav>
     `;
   },
-});
+};

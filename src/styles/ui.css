@@ -72,14 +72,19 @@ body {
   height: 1.5em;
 }
 
+.level.is-slim {
+  margin-bottom: 0.2rem;
+}
+
 .padding-0 {
   padding: 0;
 }
 
-.padding-05 {
+.padding-m {
   padding: 0.5rem;
 }
 
-.level.is-slim {
-  margin-bottom: 0.2rem;
+.margin-right-s {
+  margin-right: 0.25rem;
 }
+

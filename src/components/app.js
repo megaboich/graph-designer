@@ -1,4 +1,4 @@
-import { html, defineComponent } from "../dependencies.js";
+import { html } from "../dependencies.js";
 
 import SectionGraph from "./panel-section-graph.js";
 import SectionNode from "./panel-section-node.js";
@@ -12,8 +12,17 @@ import {
   revertLink,
 } from "../graph-data.js";
 
-export default defineComponent({
-  name: "App",
+/**
+ * @typedef {object} AppComponent
+ * -- props
+ * @property graph {GraphData}
+ * -- state
+ * @property layoutOptions {GraphLayoutOptions}
+ * @property selectedNode {GraphNode=}
+ * @property graphStructureUpdatesCount {Number}
+ */
+
+export default {
   data() {
     return {
       /** @type {GraphLayoutOptions} */
@@ -22,7 +31,6 @@ export default defineComponent({
         linkDistance: 80,
         minSeparation: 160,
       },
-      /** @type {GraphNode=} */
       selectedNode: undefined,
       graphStructureUpdatesCount: 0,
     };
@@ -30,15 +38,13 @@ export default defineComponent({
   props: {
     graph: Object,
   },
-  render() {
-    /**
-     * @typedef {object} DestructuredThis
-     * @property {GraphData} graph
-     */
-    /** @type {DestructuredThis} */ // @ts-ignore
-    const { graph } = this;
 
-    const { layoutOptions, selectedNode } = this;
+  /**
+   * @this {AppComponent}
+   * @returns {any} html
+   */
+  render() {
+    const { graph, layoutOptions, selectedNode } = this;
 
     return html`
       <div id="top-panel">
@@ -52,16 +58,7 @@ export default defineComponent({
       </div>
       <div id="left-panel">
         <${SectionGraph} layoutOptions=${layoutOptions} />
-        ${selectedNode &&
-        html`
-          <${SectionNode}
-            graph=${graph}
-            node=${selectedNode}
-            onChange=${() => {
-              this.graphStructureUpdatesCount++;
-            }}
-          />
-        `}
+
         <div class="buttons">
           <button
             class="button is-primary"
@@ -86,6 +83,17 @@ export default defineComponent({
             </button>
           `}
         </div>
+
+        ${selectedNode &&
+        html`
+          <${SectionNode}
+            graph=${graph}
+            node=${selectedNode}
+            onChange=${() => {
+              this.graphStructureUpdatesCount++;
+            }}
+          />
+        `}
         ${selectedNode &&
         html`
           <${SectionLinks}
@@ -147,4 +155,4 @@ export default defineComponent({
       />
     `;
   },
-});
+};

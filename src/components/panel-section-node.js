@@ -1,5 +1,12 @@
-// @ts-nocheck
 import { html } from "../dependencies.js";
+
+/**
+ * @typedef {object} PanelSectionNode
+ * -- props
+ * @property node {GraphNode}
+ * @property graph {GraphData}
+ * @property onChange {Function}
+ */
 
 export default {
   props: {
@@ -7,10 +14,15 @@ export default {
     graph: Object,
     onChange: Function,
   },
+
+  /**
+   * @this {PanelSectionNode}
+   * @returns {any} html
+   */
   render() {
     return html`
       <nav class="panel">
-        <p class="panel-heading is-small">Node: ${this.node.label}</p>
+        <p class="panel-heading is-small">${this.node.label}</p>
         <div class="panel-block">
           <div class="flex-column">
             <div class="field is-horizontal">
@@ -24,7 +36,7 @@ export default {
                       class="input"
                       type="text"
                       value=${this.node.label}
-                      onchange=${(e) => {
+                      onchange=${(/** @type {HTMLInputEvent} */ e) => {
                         this.node.label = e.target.value;
                         this.onChange();
                       }}
@@ -45,8 +57,8 @@ export default {
                         id="is-node-fixed"
                         type="checkbox"
                         checked=${this.node.fixed}
-                        onchange=${(e) => {
-                          this.node.fixed = e.target.checked;
+                        onchange=${(/** @type {HTMLInputEvent} */ e) => {
+                          this.node.fixed = Number(e.target.checked);
                           this.onChange();
                         }}
                       />

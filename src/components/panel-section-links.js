@@ -1,5 +1,92 @@
-// @ts-nocheck
 import { html } from "../dependencies.js";
+
+/**
+ * @typedef {object} PanelSectionLinks
+ * -- props
+ * @property node {GraphNode}
+ * @property graph {GraphData}
+ * @property onNavigate {Function}
+ * @property onDeleteLink {Function}
+ * @property onRevertLink {Function}
+ */
+
+/**
+ * @param {GraphLink} link
+ * @param {String} nodeId
+ * @this PanelSectionLinks
+ * @returns {any} html
+ */
+function renderLinkNavigation(link, nodeId) {
+  return html`
+    <div class="level-item">
+      ${link.source.id === nodeId
+        ? html`
+            <span class="margin-right-s">to</span>
+            <button
+              class="button is-ghost is-slim padding-0"
+              onclick=${() => {
+                this.onNavigate(link.target);
+              }}
+            >
+              ${link.target.label}
+            </button>
+          `
+        : html`
+            <span class="margin-right-s">from</span>
+            <button
+              class="button is-ghost is-slim padding-0"
+              onclick=${() => {
+                this.onNavigate(link.source);
+              }}
+            >
+              ${link.source.label}
+            </button>
+          `}
+    </div>
+  `;
+}
+
+/**
+ * @param {GraphLink} link
+ * @param {String} nodeId
+ * @this PanelSectionLinks
+ * @returns {any} html
+ */
+function renderLink(link, nodeId) {
+  return html`
+    <div class="level is-slim">
+      <div class="level-left">
+        ${renderLinkNavigation.call(this, link, nodeId)}
+      </div>
+      <div class="level-right">
+        <div class="level-item buttons">
+          <button
+            title="Change direction"
+            class="button is-info is-slim padding-m"
+            onclick=${() => {
+              this.onRevertLink(link);
+            }}
+          >
+            <span class="icon is-small">
+              <i class="fas fa-random"></i>
+            </span>
+          </button>
+          <button
+            title="Delete link"
+            class="button is-danger is-slim padding-m"
+            onclick=${() => {
+              this.onDeleteLink(link);
+            }}
+          >
+            <span class="icon is-small">
+              <i class="fas fa-times"></i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 export default {
   props: {
@@ -9,78 +96,31 @@ export default {
     onDeleteLink: Function,
     onRevertLink: Function,
   },
+
+  /**
+   * @this {PanelSectionLinks}
+   * @returns {any} html
+   */
   render() {
     const { id } = this.node;
-    const links = this.graph.links.filter(
-      (l) => l.source.id === id || l.target.id === id
-    );
+    const inLinks = [];
+    const outLinks = [];
+    for (const link of this.graph.links) {
+      if (link.source.id === id) {
+        inLinks.push(link);
+      }
+      if (link.target.id === id) {
+        outLinks.push(link);
+      }
+    }
+
     return html`
       <nav class="panel">
         <p class="panel-heading is-small">Connections</p>
         <div class="panel-block">
           <div class="flex-column">
-            ${links.map(
-              (l) =>
-                html`
-                  <div class="level is-slim">
-                    <div class="level-left">
-                      <div class="level-item">
-                        ${l.source.id === id
-                          ? "this"
-                          : html`
-                              <button
-                                class="button is-ghost is-slim padding-0"
-                                onclick=${() => {
-                                  this.onNavigate(l.source);
-                                }}
-                              >
-                                ${l.source.label}
-                              </button>
-                            `}
-                        ->
-                        ${l.target.id === id
-                          ? "this"
-                          : html`
-                              <button
-                                class="button is-ghost is-slim padding-0"
-                                onclick=${() => {
-                                  this.onNavigate(l.target);
-                                }}
-                              >
-                                ${l.target.label}
-                              </button>
-                            `}
-                      </div>
-                    </div>
-                    <div class="level-right">
-                      <div class="level-item buttons">
-                        <button
-                          title="Revert link direction"
-                          class="button is-info is-slim padding-05"
-                          onclick=${() => {
-                            this.onRevertLink(l);
-                          }}
-                        >
-                          <span class="icon is-small">
-                            <i class="fas fa-random"></i>
-                          </span>
-                        </button>
-                        <button
-                          title="Delete link"
-                          class="button is-danger is-slim padding-05"
-                          onclick=${() => {
-                            this.onDeleteLink(l);
-                          }}
-                        >
-                          <span class="icon is-small">
-                            <i class="fas fa-times"></i>
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                `
-            )}
+            ${inLinks.map((l) => renderLink.call(this, l, id))}
+            ${outLinks.map((l) => renderLink.call(this, l, id))}
           </div>
         </div>
       </nav>

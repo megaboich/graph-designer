@@ -1,9 +1,23 @@
-// @ts-nocheck
 import { GraphRendererD3 } from "./graph-renderer-d3.js";
 import { cola } from "../dependencies.js";
 
+/**
+ * @typedef {object} GraphComponent
+ * -- props
+ * @property graph {GraphData}
+ * @property layoutOptions {GraphLayoutOptions}
+ * @property graphStructureUpdatesCount {Number}
+ * @property onNodeClick {Function}
+ * @property selectedNode {GraphNode}
+ * @property onBgClick {Function}
+ * -- methods
+ * @property initializeLayout {(iterations?: number)=>void}
+ * @property restartLayout {()=>void}
+ *
+ * @typedef {GraphComponent & VueComponent} GraphVueComponent
+ */
+
 export default {
-  name: "Graph",
   props: {
     graph: Object,
     layoutOptions: Object,
@@ -12,18 +26,25 @@ export default {
     onBgClick: Function,
     selectedNode: Object,
   },
+
   template: `
     <div v-once id="graph-main"></div>
   `,
+
+  /**
+   * @this {GraphVueComponent}
+   */
   mounted() {
     const { graph } = this;
 
     let needsUpdate = false;
+    /** @type {any} */
     let layout;
 
     this.initializeLayout = (iterations = 30) => {
       const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
-      layout = new cola.Layout()
+      layout = new cola.Layout();
+      layout
         .nodes(graph.nodes)
         .links(graph.links)
         .groups(graph.groups)
@@ -53,14 +74,14 @@ export default {
     this.restartLayout = () => {
       graph.nodes.forEach((node) => {
         // eslint-disable-next-line no-bitwise
-        node.fixed |= 2;
+        node.fixed = (node.fixed || 0) | 2;
       });
 
       this.initializeLayout(0);
 
       graph.nodes.forEach((node) => {
         // eslint-disable-next-line no-bitwise
-        node.fixed &= ~6;
+        node.fixed = (node.fixed || 0) & ~6;
       });
     };
 
