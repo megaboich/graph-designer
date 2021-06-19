@@ -14,7 +14,6 @@ import { html } from "../dependencies.js";
  * @param {GraphLink} link
  * @param {String} nodeId
  * @this PanelSectionLinks
- * @returns {any} html
  */
 function renderLinkNavigation(link, nodeId) {
   return html`
@@ -50,7 +49,6 @@ function renderLinkNavigation(link, nodeId) {
  * @param {GraphLink} link
  * @param {String} nodeId
  * @this PanelSectionLinks
- * @returns {any} html
  */
 function renderLink(link, nodeId) {
   return html`
@@ -99,7 +97,6 @@ export default {
 
   /**
    * @this {PanelSectionLinks}
-   * @returns {any} html
    */
   render() {
     const { id } = this.node;

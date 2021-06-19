@@ -14,7 +14,6 @@ export default {
 
   /**
    * @this {PanelSectionGraph}
-   * @returns {any} html
    */
   render() {
     const { layoutOptions } = this;

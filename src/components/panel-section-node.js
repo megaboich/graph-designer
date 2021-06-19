@@ -17,7 +17,6 @@ export default {
 
   /**
    * @this {PanelSectionNode}
-   * @returns {any} html
    */
   render() {
     return html`

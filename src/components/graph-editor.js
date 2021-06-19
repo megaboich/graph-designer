@@ -4,6 +4,8 @@ import SectionGraph from "./panel-section-graph.js";
 import SectionNode from "./panel-section-node.js";
 import SectionLinks from "./panel-section-links.js";
 import Graph from "./graph-view.js";
+import Dropdown from "./dropdown.js";
+
 import {
   loadGraph,
   addNewNode,
@@ -19,6 +21,7 @@ import {
  * @property route {String}
  * -- state
  * @property graph {GraphData=}
+ * @property isLoading {Boolean}
  * @property layoutOptions {GraphLayoutOptions}
  * @property selectedNode {GraphNode=}
  * @property graphStructureUpdatesCount {Number}
@@ -29,6 +32,8 @@ import {
 export default {
   data() {
     return {
+      // Graph state variable is not known to Vue intentionally in order to prevent Vue of creating observables for the whole graph tree. This impacts performance a lot.
+      isLoading: true,
       /** @type {GraphLayoutOptions} */
       layoutOptions: {
         layoutType: "auto",
@@ -50,7 +55,7 @@ export default {
   async mounted() {
     const graph = await loadGraph(`graph-samples/${this.route}.json`);
     this.graph = graph;
-    this.$forceUpdate();
+    this.isLoading = false;
   },
 
   /**
@@ -58,8 +63,8 @@ export default {
    * @returns {any} html
    */
   render() {
-    const { graph, layoutOptions, selectedNode } = this;
-    if (!graph) {
+    const { isLoading, graph, layoutOptions, selectedNode } = this;
+    if (isLoading || !graph) {
       return html`
         <div class="notification m-5">
           <p>Loading...</p>
@@ -83,6 +88,13 @@ export default {
             </span>
             <span>GitHub</span>
           </a>
+          <${Dropdown}
+            label="Menu"
+            items=${[
+              { label: "Export", onclick: () => alert("hahaha") },
+              { label: "Import", onclick: () => alert("hohoho") },
+            ]}
+          />
         </div>
         <div id="left-panel">
           <${SectionGraph} layoutOptions=${layoutOptions} />

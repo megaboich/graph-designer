@@ -1,5 +1,14 @@
-// @ts-nocheck
 import { html } from "../dependencies.js";
+
+/**
+ * @typedef {object} Select
+ * -- props
+ * @property value {String}
+ * @property options {Array<{value: string, text: string}>}
+ * @property onchange {(value: string) => void}
+ *
+ * @typedef {Select & VueComponent} SelectVue
+ */
 
 export default {
   name: "Select",
@@ -8,10 +17,13 @@ export default {
     options: Object,
     onchange: Function,
   },
+  /**
+   * @this {SelectVue}
+   */
   render() {
     return html`
       <select
-        onchange=${(e) => {
+        onchange=${(/** @type HTMLInputEvent */ e) => {
           this.onchange(e.target.value);
         }}
       >
