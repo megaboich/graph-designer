@@ -1,5 +1,5 @@
 import { GraphRendererD3 } from "./graph-renderer-d3.js";
-import { cola } from "../dependencies.js";
+import { cola } from "../../dependencies.js";
 
 /**
  * @typedef {object} GraphView
@@ -28,7 +28,7 @@ export default {
   },
 
   template: `
-    <div v-once id="graph-main"></div>
+    <div v-once id="main"></div>
   `,
 
   /**

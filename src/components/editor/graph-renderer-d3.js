@@ -1,4 +1,4 @@
-import { cola, d3 } from "../dependencies.js";
+import { cola, d3 } from "../../dependencies.js";
 
 const margin = 6;
 const pad = 12;
@@ -8,9 +8,7 @@ const pad = 12;
  * @param {GraphNode} node
  * @param {MouseEvent} event
  * @returns {void}
- */
-
-/**
+ 
  * @callback GraphBgClick
  * @param {{x:number, y:number, event:MouseEvent}} flags
  * @returns {void}
@@ -37,7 +35,7 @@ export class GraphRendererD3 {
 
   setupContainer() {
     const outer = d3
-      .select("#graph-main")
+      .select("#main")
       .append("svg")
       .attr("id", "svg-main")
       .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -124,6 +122,7 @@ export class GraphRendererD3 {
       }
     };
 
+    // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
     // @ts-ignore
     outer.call(d3.zoom().on("zoom", zoomHandler));
   }
@@ -195,6 +194,7 @@ export class GraphRendererD3 {
       )
       .attr("rx", (d) => d.rx || null)
       .attr("ry", (d) => d.rx || null)
+      // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
       // @ts-ignore
       .call(dragNode);
 
@@ -221,6 +221,7 @@ export class GraphRendererD3 {
       .on("mousedown", onNodeClick)
       .attr("class", "label")
       .each(insertLinebreaks)
+      // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
       // @ts-ignore
       .call(dragNode);
   }

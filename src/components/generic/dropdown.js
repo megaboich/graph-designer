@@ -1,4 +1,4 @@
-import { html } from "../dependencies.js";
+import { html } from "../../dependencies.js";
 
 /**
  * @typedef {object} DropdownItem

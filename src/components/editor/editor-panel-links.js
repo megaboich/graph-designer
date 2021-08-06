@@ -1,7 +1,7 @@
-import { html } from "../dependencies.js";
+import { html } from "../../dependencies.js";
 
 /**
- * @typedef {object} PanelSectionLinks
+ * @typedef {object} EditorPanelLinks
  * -- props
  * @property node {GraphNode}
  * @property graph {GraphData}
@@ -13,7 +13,7 @@ import { html } from "../dependencies.js";
 /**
  * @param {GraphLink} link
  * @param {String} nodeId
- * @this PanelSectionLinks
+ * @this EditorPanelLinks
  */
 function renderLinkNavigation(link, nodeId) {
   return html`
@@ -48,7 +48,7 @@ function renderLinkNavigation(link, nodeId) {
 /**
  * @param {GraphLink} link
  * @param {String} nodeId
- * @this PanelSectionLinks
+ * @this EditorPanelLinks
  */
 function renderLink(link, nodeId) {
   return html`
@@ -96,7 +96,7 @@ export default {
   },
 
   /**
-   * @this {PanelSectionLinks}
+   * @this {EditorPanelLinks}
    */
   render() {
     const { id } = this.node;

@@ -1,7 +1,7 @@
-import { html } from "../dependencies.js";
+import { html } from "../../dependencies.js";
 
 /**
- * @typedef {object} PanelSectionNode
+ * @typedef {object} EditorPanelNode
  * -- props
  * @property node {GraphNode}
  * @property graph {GraphData}
@@ -16,7 +16,7 @@ export default {
   },
 
   /**
-   * @this {PanelSectionNode}
+   * @this {EditorPanelNode}
    */
   render() {
     return html`

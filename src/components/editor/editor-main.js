@@ -1,10 +1,10 @@
-import { html } from "../dependencies.js";
+import { html, saveAs } from "../../dependencies.js";
 
-import SectionGraph from "./panel-section-graph.js";
-import SectionNode from "./panel-section-node.js";
-import SectionLinks from "./panel-section-links.js";
-import Graph from "./graph-view.js";
-import Dropdown from "./dropdown.js";
+import TopPanel from "../top-panel.js";
+import EditorPanelLayout from "./editor-panel-layout.js";
+import EditorPanelNode from "./editor-panel-node.js";
+import EditorPanelLinks from "./editor-panel-links.js";
+import GraphView from "./graph-view.js";
 
 import {
   loadGraph,
@@ -13,10 +13,10 @@ import {
   addNewLink,
   deleteLink,
   revertLink,
-} from "../graph-data.js";
+} from "../../graph-data.js";
 
 /**
- * @typedef {object} GraphEditor
+ * @typedef {object} Editor
  * -- props
  * @property route {String}
  * -- state
@@ -25,14 +25,17 @@ import {
  * @property layoutOptions {GraphLayoutOptions}
  * @property selectedNode {GraphNode=}
  * @property graphStructureUpdatesCount {Number}
+ * --methods
+ * @property renderEditor {Function}
+ * @property exportToSvg {Function}
  *
- * @typedef {GraphEditor & VueComponent} GraphEditorVue
+ * @typedef {Editor & VueComponent} EditorVue
  */
 
 export default {
   data() {
     return {
-      // Graph state variable is not known to Vue intentionally in order to prevent Vue of creating observables for the whole graph tree. This impacts performance a lot.
+      // graph: undefined, /* Graph state variable is not known to Vue intentionally in order to prevent Vue of creating observables for the whole graph tree. This impacts performance a lot. */
       isLoading: true,
       /** @type {GraphLayoutOptions} */
       layoutOptions: {
@@ -40,6 +43,7 @@ export default {
         linkDistance: 80,
         minSeparation: 160,
       },
+      /** @type {GraphNode=} */
       selectedNode: undefined,
       graphStructureUpdatesCount: 0,
     };
@@ -50,54 +54,64 @@ export default {
   },
 
   /**
-   * @this {GraphEditorVue}
+   * @this {EditorVue}
    */
   async mounted() {
-    const graph = await loadGraph(`graph-samples/${this.route}.json`);
+    const { route } = this;
+    let graph;
+    if (route.startsWith("example/")) {
+      const id = route.substr(8);
+      const dataUrl = `graph-samples/${id}.json`;
+      graph = await loadGraph(dataUrl);
+    }
     this.graph = graph;
     this.isLoading = false;
   },
 
   /**
-   * @this {GraphEditor}
+   * @this {EditorVue}
    * @returns {any} html
    */
   render() {
-    const { isLoading, graph, layoutOptions, selectedNode } = this;
-    if (isLoading || !graph) {
-      return html`
-        <div class="notification m-5">
-          <p>Loading...</p>
-        </div>
-      `;
-    }
+    const { isLoading } = this;
 
     return html`
-      <div class="graph-editor">
-        <div id="top-panel">
-          <p>Graph designer</p>
-          <a href="#">
-            <span class="icon">
-              <i class="far fa-images"></i>
-            </span>
-            <span>Gallery</span>
-          </a>
-          <a href="https://github.com/megaboich/graph-layout-designer">
-            <span class="icon">
-              <i class="fab fa-github-square"></i>
-            </span>
-            <span>GitHub</span>
-          </a>
-          <${Dropdown}
-            label="Menu"
-            items=${[
-              { label: "Export", onclick: () => alert("hahaha") },
-              { label: "Import", onclick: () => alert("hohoho") },
-            ]}
-          />
-        </div>
+      <div class="editor-main">
+        <${TopPanel} isEditor onExportClick=${() => this.exportToSvg()} />
+        ${isLoading
+          ? html`
+              <div class="m-5">
+                <p>Loading...</p>
+              </div>
+            `
+          : this.renderEditor()}
+      </div>
+    `;
+  },
+
+  methods: {
+    /**
+     * @this {EditorVue}
+     */
+    exportToSvg() {
+      const svgEl = document.getElementById("svg-main");
+      if (!svgEl) {
+        return;
+      }
+      const svgBody = svgEl.outerHTML;
+      const blob = new Blob([svgBody], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, "graph.svg");
+    },
+
+    /**
+     * @this {EditorVue}
+     */
+    renderEditor() {
+      const { graph, layoutOptions, selectedNode } = this;
+      if (!graph) return null;
+      return html`
         <div id="left-panel">
-          <${SectionGraph} layoutOptions=${layoutOptions} />
+          <${EditorPanelLayout} layoutOptions=${layoutOptions} />
 
           <div class="buttons">
             <button
@@ -126,7 +140,7 @@ export default {
 
           ${selectedNode &&
           html`
-            <${SectionNode}
+            <${EditorPanelNode}
               graph=${graph}
               node=${selectedNode}
               onChange=${() => {
@@ -136,7 +150,7 @@ export default {
           `}
           ${selectedNode &&
           html`
-            <${SectionLinks}
+            <${EditorPanelLinks}
               graph=${graph}
               node=${selectedNode}
               onNavigate=${(/** @type GraphNode */ node) => {
@@ -155,7 +169,7 @@ export default {
             />
           `}
         </div>
-        <${Graph}
+        <${GraphView}
           graph=${graph}
           graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
           layoutOptions=${layoutOptions}
@@ -193,7 +207,7 @@ export default {
             }
           }}
         />
-      </div>
-    `;
+      `;
+    },
   },
 };

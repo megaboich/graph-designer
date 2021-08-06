@@ -1,5 +1,6 @@
-import GraphEditor from "./components/graph-editor.js";
+import GraphEditor from "./components/editor/editor-main.js";
 import Gallery from "./components/gallery.js";
+import About from "./components/about.js";
 
 import { createApp, html } from "./dependencies.js";
 
@@ -39,13 +40,19 @@ const rootComponent = {
    * @this {MainComponent}
    */
   render() {
-    if (!this.route) {
+    const { route } = this;
+    if (!route) {
       return html`
         <${Gallery} />
       `;
     }
+    if (route === "about") {
+      return html`
+        <${About} />
+      `;
+    }
     return html`
-      <${GraphEditor} route=${this.route} />
+      <${GraphEditor} route=${route} />
     `;
   },
 };

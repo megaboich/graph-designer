@@ -1,0 +1,88 @@
+<svg id="svg-main"
+  xmlns="http://www.w3.org/2000/svg" pointer-events="all">
+  <style>
+      .background {
+        fill: white;
+      }
+
+      .node {
+        stroke: black;
+        stroke-width: 1px;
+        cursor: move;
+        fill: beige;
+      }
+
+      .node[data-selected] {
+        stroke: red;
+      }
+
+      .node[data-fixed] {
+        fill: pink;
+      }
+      
+      .link {
+        fill: none;
+        stroke: #000;
+        stroke-width: 3px;
+        opacity: 0.7;
+        marker-end: url(#end-arrow);
+      }
+      
+      .label {
+        fill: black;
+        font-family: Verdana;
+        font-size: 25px;
+        font-weight: 100;
+        text-anchor: middle;
+        cursor: move;
+      }
+  </style>
+  <rect class="background" width="100%" height="100%"></rect>
+  <defs>
+    <marker id="end-arrow" viewBox="0 -5 10 10" refX="5" markerWidth="3" markerHeight="3" orient="auto">
+      <path d="M0,-5L10,0L0,5L2,0" stroke-width="0px" fill="#000"></path>
+    </marker>
+  </defs>
+  <g id="vis" transform="translate(-350.0,-350.0) scale(1)">
+    <g pointer-events="none"></g>
+    <g>
+      <rect class="node" width="46.8" height="23.6" x="292.7" y="333.8"></rect>
+      <rect class="node" width="42.3" height="23.6" x="356.7" y="386.3"></rect>
+      <rect class="node" width="44.6" height="23.6" x="424.9" y="430.9"></rect>
+      <rect class="node" width="53.5" height="23.6" x="494.7" y="472.5"></rect>
+      <rect class="node" width="49.3" height="23.6" x="524.7" y="556.0"></rect>
+      <rect class="node" width="46.9" height="23.6" x="612.0" y="537.9"></rect>
+      <rect class="node" width="53.1" height="23.6" x="581.2" y="454.5"></rect>
+      <text class="label" transform="translate(316.1,333.8)">
+        <tspan x="0" dy="15" font-size="12">Alkaid</tspan>
+      </text>
+      <text class="label" transform="translate(377.8,386.4)">
+        <tspan x="0" dy="15" font-size="12">Mizar</tspan>
+      </text>
+      <text class="label" transform="translate(447.2,430.9)">
+        <tspan x="0" dy="15" font-size="12">Alioth</tspan>
+      </text>
+      <text class="label" transform="translate(521.4,472.5)">
+        <tspan x="0" dy="15" font-size="12">Megrez</tspan>
+      </text>
+      <text class="label" transform="translate(549.4,556.0)">
+        <tspan x="0" dy="15" font-size="12">Dubhe</tspan>
+      </text>
+      <text class="label" transform="translate(635.5,537.9)">
+        <tspan x="0" dy="15" font-size="12">Merak</tspan>
+      </text>
+      <text class="label" transform="translate(607.8,454.4)">
+        <tspan x="0" dy="15" font-size="12">Phecda</tspan>
+      </text>
+    </g>
+    <g>
+      <line class="link" x1="330.0" y1="357.5" x2="360.2" y2="383.1"></line>
+      <line class="link" x1="396.3" y1="410.0" x2="424.6" y2="428.2"></line>
+      <line class="link" x1="468.3" y1="454.5" x2="496.0" y2="470.1"></line>
+      <line class="link" x1="525.4" y1="496.2" x2="543.8" y2="551.3"></line>
+      <line class="link" x1="574.0" y1="562.7" x2="607.2" y2="555.7"></line>
+      <line class="link" x1="631.6" y1="537.9" x2="613.3" y2="482.8"></line>
+      <line class="link" x1="581.2" y1="471.8" x2="553.1" y2="477.7"></line>
+    </g>
+  </g>
+</svg>

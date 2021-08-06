@@ -1,8 +1,8 @@
-import { html } from "../dependencies.js";
-import Select from "./select.js";
+import { html } from "../../dependencies.js";
+import Select from "../generic/select.js";
 
 /**
- * @typedef {object} PanelSectionGraph
+ * @typedef {object} EditorPanelLayout
  * -- props
  * @property layoutOptions {GraphLayoutOptions}
  */
@@ -13,14 +13,14 @@ export default {
   },
 
   /**
-   * @this {PanelSectionGraph}
+   * @this {EditorPanelLayout}
    */
   render() {
     const { layoutOptions } = this;
 
     return html`
       <nav class="panel">
-        <p class="panel-heading is-small">Graph</p>
+        <p class="panel-heading is-small">Layout</p>
         <div class="panel-block">
           <div class="flex-column">
             <div class="field is-horizontal">
