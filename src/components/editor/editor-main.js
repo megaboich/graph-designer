@@ -27,7 +27,7 @@ import {
  * @property graphStructureUpdatesCount {Number}
  * --methods
  * @property renderEditor {Function}
- * @property exportToSvg {Function}
+ * @property exportGraph {(exportType: string)=>void}
  *
  * @typedef {Editor & VueComponent} EditorVue
  */
@@ -77,7 +77,7 @@ export default {
 
     return html`
       <div class="editor-main">
-        <${TopPanel} isEditor onExportClick=${() => this.exportToSvg()} />
+        <${TopPanel} isEditor onExportClick=${this.exportGraph} />
         ${isLoading
           ? html`
               <div class="m-5">
@@ -91,16 +91,28 @@ export default {
 
   methods: {
     /**
+     * @param {String} exportType
      * @this {EditorVue}
      */
-    exportToSvg() {
-      const svgEl = document.getElementById("svg-main");
-      if (!svgEl) {
-        return;
+    exportGraph(exportType) {
+      switch (exportType) {
+        case "svg":
+          {
+            const svgEl = document.getElementById("svg-main");
+            if (!svgEl) {
+              return;
+            }
+            const svgBody = svgEl.outerHTML;
+            const blob = new Blob([svgBody], {
+              type: "text/plain;charset=utf-8",
+            });
+            saveAs(blob, "graph.svg");
+          }
+          break;
+        default:
+          console.log(`Export ${exportType} is not implemented yet`);
+          break;
       }
-      const svgBody = svgEl.outerHTML;
-      const blob = new Blob([svgBody], { type: "text/plain;charset=utf-8" });
-      saveAs(blob, "graph.svg");
     },
 
     /**

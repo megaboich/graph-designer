@@ -168,7 +168,7 @@ export function addNewLink(graph, sourceId, targetId) {
 /**
  * Deletes link from th graph
  * @param {GraphData} graph
- * @param {*} linkToDelete
+ * @param {GraphLink} linkToDelete
  */
 export function deleteLink(graph, linkToDelete) {
   for (let i = 0; i < graph.links.length; ++i) {

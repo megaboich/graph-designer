@@ -1,14 +1,15 @@
 import { html } from "../dependencies.js";
 import Dropdown from "./generic/dropdown.js";
+import Modal from "./generic/modal.js";
 
 /**
  * @typedef {object} TopPanel
  * -- props
  * @property isEditor {boolean}
- * @property onExportClick {()=>void}
+ * @property onExportClick {(exportType: string)=>void}
  
  * -- state
- *
+ * @property isExportModalOpened {boolean}
  * @typedef {TopPanel & VueComponent} TopPanelVue
  */
 
@@ -16,6 +17,12 @@ export default {
   props: {
     isEditor: Boolean,
     onExportClick: Function,
+  },
+
+  data() {
+    return {
+      isExportModalOpened: false,
+    };
   },
 
   /**
@@ -40,7 +47,7 @@ export default {
           </div>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="navbarMain" class="navbar-menu">
           <div class="navbar-start">
             <a class="navbar-item" href="#">
               <span class="icon">
@@ -75,7 +82,9 @@ export default {
                   items=${[
                     {
                       label: "Export",
-                      onclick: () => this.onExportClick(),
+                      onclick: () => {
+                        this.isExportModalOpened = true;
+                      },
                     },
                     {
                       label: "Import",
@@ -88,6 +97,61 @@ export default {
           `}
         </div>
       </nav>
+
+      ${this.isExportModalOpened &&
+      html`
+        <${Modal}
+          title="Export"
+          onclose=${() => {
+            this.isExportModalOpened = false;
+          }}
+        >
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>
+                  <button
+                    class="button is-info"
+                    onclick=${() => {
+                      this.onExportClick("svg");
+                      this.isExportModalOpened = false;
+                    }}
+                  >
+                    Export to SVG
+                  </button>
+                </td>
+                <td>
+                  <p>Creates SVG image attributed with complete metadata.</p>
+                  <p>
+                    Can be imported back and also used as graphics just like any
+                    other svg.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td class="pt-5">
+                  <button
+                    class="button is-info"
+                    onclick=${() => {
+                      this.onExportClick("json");
+                      this.isExportModalOpened = false;
+                    }}
+                  >
+                    Export to JSON
+                  </button>
+                </td>
+                <td class="pt-5">
+                  <p>
+                    Saves the graph data in custom JSON format. Can be imported
+                    back.
+                  </p>
+                  <p>NOT IMPLEMENTED YET.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        <//>
+      `}
     `;
   },
 };

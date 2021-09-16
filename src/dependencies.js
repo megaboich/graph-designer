@@ -1,9 +1,6 @@
 // @ts-nocheck
 
-import {
-  createApp,
-  defineComponent as VueDefineComponent,
-} from "https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.js";
+import { createApp } from "https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.js";
 import { h } from "https://unpkg.com/vue@3.0.11/dist/vue.runtime.esm-browser.js";
 import htm from "https://unpkg.com/htm@3.0.4/dist/htm.module.js?module";
 
@@ -19,7 +16,4 @@ const html = htm.bind(h);
 
 const { d3, saveAs } = window;
 
-/** @type { import("vue").defineComponent } */
-const defineComponent = VueDefineComponent;
-
-export { createApp, defineComponent, html, /** @type {d3} */ d3, saveAs, cola };
+export { createApp, html, /** @type {d3} */ d3, saveAs, cola };
