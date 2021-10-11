@@ -187,8 +187,8 @@ export default {
           layoutOptions=${layoutOptions}
           selectedNode=${selectedNode}
           onNodeClick=${(
-            /** @type {GraphNode} */ node,
-            /** @type {MouseEvent} */ event
+            /** @type {MouseEvent} */ event,
+            /** @type {GraphNode} */ node
           ) => {
             if (
               selectedNode &&

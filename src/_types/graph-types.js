@@ -9,11 +9,16 @@
  * @property height {number=}
  * @property rx {number=}
  * @property ry {number=}
- * @property innerBounds {any=}
  * @property bounds {any=}
  * @property hardWidth {number=}
  * @property hardHeight {number=}
  * @property fixed {number=}
+ * @property imageUrl {string=}
+ * @property imageOriginalWidth {number=}
+ * @property imageOriginalHeight {number=}
+ * @property imageZoom {number=}
+ * @property imageWidth {number=}
+ * @property imageHeight {number=}
  */
 
 /**

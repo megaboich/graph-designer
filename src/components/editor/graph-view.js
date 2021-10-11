@@ -11,7 +11,7 @@ import { cola } from "../../dependencies.js";
  * @property selectedNode {GraphNode}
  * @property onBgClick {Function}
  * -- methods
- * @property initializeLayout {(iterations?: number)=>void}
+ * @property initializeLayout {(isUpdated?: boolean)=>void}
  * @property restartLayout {()=>void}
  *
  * @typedef {GraphView & VueComponent} GraphViewVue
@@ -41,7 +41,7 @@ export default {
     /** @type {any} */
     let layout;
 
-    this.initializeLayout = (iterations = 30) => {
+    this.initializeLayout = (isUpdated = false) => {
       const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
       layout = new cola.Layout();
       layout
@@ -50,7 +50,13 @@ export default {
         .groups(graph.groups)
         .convergenceThreshold(0.05)
         .size([1000, 1000])
-        .jaccardLinkLengths(linkDistance)
+        .linkDistance((/** @type {GraphLink} */ link) => {
+          return (
+            linkDistance +
+            ((link.source.width || 0) + (link.source.height || 0)) / 4.1 +
+            ((link.target.width || 0) + (link.target.height || 0)) / 4.1
+          );
+        })
         .avoidOverlaps(true)
         .on(cola.EventType.start, () => {
           needsUpdate = true;
@@ -67,34 +73,28 @@ export default {
       }
 
       layout.kick = () => {};
-      layout.start(0, 0, iterations);
+      layout.start(0, 0, isUpdated ? 0 : 30, 0, true, !isUpdated);
       layout.tick();
     };
 
     this.restartLayout = () => {
-      graph.nodes.forEach((node) => {
-        // eslint-disable-next-line no-bitwise
-        node.fixed = (node.fixed || 0) | 2;
-      });
-
-      this.initializeLayout(0);
-
-      graph.nodes.forEach((node) => {
-        // eslint-disable-next-line no-bitwise
-        node.fixed = (node.fixed || 0) & ~6;
-      });
+      this.initializeLayout(true);
     };
 
     this.initializeLayout();
 
     const render = new GraphRendererD3({
       graph,
-      onUpdate: () => {
+      onUpdate: (/** @type {Boolean} */ forceLayout) => {
         needsUpdate = true;
-        layout.resume();
+        if (forceLayout) {
+          layout.start(0, 0, 0, 0, true, false);
+        } else {
+          layout.resume();
+        }
       },
-      onNodeClick: (node, flags) => {
-        this.onNodeClick(node, flags);
+      onNodeClick: (event, node) => {
+        this.onNodeClick(event, node);
         needsUpdate = true;
       },
       onBgClick: (flags) => {
@@ -111,7 +111,7 @@ export default {
         graph.selectedNodeId = this.selectedNode && this.selectedNode.id;
         render.update();
       }
-    }, 20);
+    }, 1000 / 60 /** 60fps */);
 
     this.$watch("layoutOptions", this.restartLayout, { deep: true });
     this.$watch("graphStructureUpdatesCount", () => {

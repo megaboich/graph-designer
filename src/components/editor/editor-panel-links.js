@@ -22,7 +22,7 @@ function renderLinkNavigation(link, nodeId) {
         ? html`
             <span class="mr-1">to</span>
             <button
-              class="button is-ghost is-slim p-0"
+              class="button is-ghost is-slim p-0 btn-link-connection"
               onclick=${() => {
                 this.onNavigate(link.target);
               }}
@@ -33,7 +33,7 @@ function renderLinkNavigation(link, nodeId) {
         : html`
             <span class="mr-1">from</span>
             <button
-              class="button is-ghost is-slim p-0"
+              class="button is-ghost is-slim p-0 btn-link-connection"
               onclick=${() => {
                 this.onNavigate(link.source);
               }}
@@ -77,7 +77,7 @@ function renderLink(link, nodeId) {
             }}
           >
             <span class="icon is-small">
-              <i class="fas fa-times"></i>
+              <i class="far fa-trash-alt"></i>
             </span>
           </button>
         </div>

@@ -79,3 +79,16 @@ body {
 .button.is-slim {
   height: 1.5em;
 }
+
+/* Custom styles */
+.btn-link-connection {
+  max-width: 220px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+}
+
+.node-img-url-container {
+  overflow-wrap: break-word;
+  max-width: 230px;
+}

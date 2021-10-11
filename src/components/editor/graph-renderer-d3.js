@@ -1,18 +1,19 @@
 import { cola, d3 } from "../../dependencies.js";
 
-const margin = 6;
-const pad = 12;
-
 /**
  * @callback GraphNodeClick
- * @param {GraphNode} node
  * @param {MouseEvent} event
+ * @param {GraphNode} node
  * @returns {void}
  
  * @callback GraphBgClick
  * @param {{x:number, y:number, event:MouseEvent}} flags
  * @returns {void}
  */
+
+const NODE_FONT_SIZE = 14;
+const NODE_PADDING_TOP = 5;
+const NODE_PADDING_LEFT = 10;
 
 export class GraphRendererD3 {
   /**
@@ -28,6 +29,7 @@ export class GraphRendererD3 {
     this.onNodeClick = onNodeClick;
     this.onBgClick = onBgClick;
     this.transform = { x: 0, y: 0, k: 1 };
+    this.needsNodeSizeAdjustment = false;
 
     this.setupContainer();
     this.setupElements();
@@ -47,18 +49,18 @@ export class GraphRendererD3 {
         fill: white;
       }
 
-      .node {
+      .node > .node-bg {
         stroke: black;
         stroke-width: 1px;
         cursor: move;
         fill: beige;
       }
 
-      .node[data-selected] {
+      .node[data-selected] > .node-bg {
         stroke: red;
       }
 
-      .node[data-fixed] {
+      .node[data-fixed] > .node-bg {
         fill: pink;
       }
       
@@ -73,7 +75,7 @@ export class GraphRendererD3 {
       .label {
         fill: black;
         font-family: Verdana;
-        font-size: 25px;
+        font-size: ${NODE_FONT_SIZE}px;
         font-weight: 100;
         text-anchor: middle;
         cursor: move;
@@ -133,11 +135,14 @@ export class GraphRendererD3 {
       return;
     }
     const groupsLayer = vis.append("g");
+    groupsLayer.attr("data-groups-layer", true);
     groupsLayer.attr("pointer-events", "none");
 
     const nodesLayer = vis.append("g");
+    nodesLayer.attr("data-nodes-layer", true);
     this.nodesLayer = nodesLayer;
     const linksLayer = vis.append("g");
+    linksLayer.attr("data-links-layer", true);
 
     this.group = groupsLayer
       .selectAll(".group")
@@ -173,57 +178,79 @@ export class GraphRendererD3 {
         this.onUpdate();
       });
 
-    const onNodeClick = (
-      /** @type MouseEvent */ e,
-      /** @type GraphNode */ d
-    ) => {
-      // console.log("MOUSE", e);
-      this.onNodeClick(d, e);
-    };
-
     this.node = nodesLayer
       .selectAll(".node")
       .data(this.graph.nodes)
       .enter()
-      .append("rect")
-      .on("mousedown", onNodeClick)
+      .append("svg")
+      .attr("width", (d) => d.width || 30)
+      .attr("height", (d) => d.height || 30)
+      .on("mousedown", this.onNodeClick)
       .attr("class", "node")
-      .attr("width", (d) => (d.width ? d.width + 2 * pad + 2 * margin : null))
-      .attr("height", (d) =>
-        d.height ? d.height + 2 * pad + 2 * margin : null
-      )
-      .attr("rx", (d) => d.rx || null)
-      .attr("ry", (d) => d.rx || null)
-      // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
       // @ts-ignore
-      .call(dragNode);
+      .call(dragNode); // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
+
+    this.needsNodeSizeAdjustment = true;
 
     /**
      * @this {SVGElement}
      * @param {GraphNode} d
      */
-    function insertLinebreaks(d) {
+    function construstNodeChildElements(d) {
+      const words = d.label.split("\n");
       const el = d3.select(this);
-      const words = d.label.split(" ");
-      el.text("");
+
+      el.append("rect")
+        .attr("class", "node-bg")
+        .attr("width", "100%")
+        .attr("height", "100%");
+
+      if (d.imageUrl) {
+        const image = el
+          .append("image")
+          .attr("href", d.imageUrl)
+          .attr(
+            "style",
+            `transform: translate(calc(50% - ${
+              (d.imageWidth || 1) / 2
+            }.001px), ${NODE_PADDING_TOP}px);`
+          )
+          .attr("width", d.imageWidth || 1)
+          .attr("height", d.imageHeight || 1)
+          .on("load", () => {
+            // This adds additional repaint/reflow on image load just to fix Chrome weird behavior of not applying calc at the first rendering of the node
+            image.attr(
+              "style",
+              `transform: translate(calc(50% - ${
+                (d.imageWidth || 1) / 2
+              }px), ${NODE_PADDING_TOP}px);`
+            );
+          });
+      }
+
+      const text = el
+        .append("text")
+        .attr("class", "label")
+        .attr("x", "50%")
+        .attr("y", "0")
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "middle");
 
       for (let i = 0; i < words.length; i++) {
-        const tspan = el.append("tspan").text(words[i]);
-        tspan.attr("x", 0).attr("dy", "15").attr("font-size", "12");
+        const tspan = text.append("tspan").text(words[i]);
+        tspan
+          .attr("x", "50%")
+          .attr(
+            "dy",
+            i === 0
+              ? NODE_FONT_SIZE +
+                  (d.imageUrl ? d.imageHeight || 1 + NODE_PADDING_TOP / 2 : 0)
+              : NODE_FONT_SIZE
+          );
       }
     }
 
-    this.label = nodesLayer
-      .selectAll(".label")
-      .data(this.graph.nodes)
-      .enter()
-      .append("text")
-      .on("mousedown", onNodeClick)
-      .attr("class", "label")
-      .each(insertLinebreaks)
-      // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
-      // @ts-ignore
-      .call(dragNode);
+    this.node.each(construstNodeChildElements);
   }
 
   destroyElements() {
@@ -233,21 +260,13 @@ export class GraphRendererD3 {
   }
 
   update() {
-    const { node, link, label, group } = this;
-    if (!node || !link || !label || !group) {
+    const { node, link, group, onUpdate } = this;
+    if (!node || !link || !group) {
       return;
     }
 
-    node.each((d) => {
-      d.innerBounds = d.bounds.inflate(-margin);
-    });
-
     link.each((d) => {
-      d.route = cola.makeEdgeBetween(
-        d.source.innerBounds,
-        d.target.innerBounds,
-        5
-      );
+      d.route = cola.makeEdgeBetween(d.source.bounds, d.target.bounds, -2);
     });
 
     link
@@ -256,44 +275,45 @@ export class GraphRendererD3 {
       .attr("x2", (d) => d.route.arrowStart.x.toFixed(1))
       .attr("y2", (d) => d.route.arrowStart.y.toFixed(1));
 
-    label.each(function eachLabel(d) {
-      if (d.hardWidth && d.hardHeight) {
-        d.width = d.hardWidth;
-        d.height = d.hardHeight;
-      } else {
-        const b = this.getBBox();
-        d.width = b.width + 2 * margin + 8;
-        d.height = b.height + 2 * margin + 8;
+    /**
+     * @param d {GraphNode}
+     * @this {SVGGraphicsElement}
+     */
+    function adjustNodeSize(d) {
+      const bb = this.getBBox();
+      const nw =
+        Math.max(bb.width, d.imageUrl ? d.imageWidth || 1 : 0) +
+        NODE_PADDING_LEFT * 2;
+      const nh =
+        bb.height +
+        NODE_PADDING_TOP * 2 +
+        (d.imageUrl ? d.imageHeight || 1 : 0);
+      if (nw !== d.width || nh !== d.height) {
+        d.width = nw;
+        d.height = nh;
+        onUpdate(true);
       }
-    });
+    }
+
+    if (this.needsNodeSizeAdjustment) {
+      node.select(".label").each(adjustNodeSize);
+      this.needsNodeSizeAdjustment = false;
+    }
 
     node
       .attr("data-selected", (d) =>
         d.id === this.graph.selectedNodeId ? true : null
       )
       .attr("data-fixed", (d) => (d.fixed ? true : null))
-      .attr("x", (d) => d.innerBounds.x.toFixed(1))
-      .attr("y", (d) => d.innerBounds.y.toFixed(1))
-      .attr("width", (d) => d.innerBounds.width().toFixed(1))
-      .attr("height", (d) => d.innerBounds.height().toFixed(1));
+      .attr("x", (d) => d.bounds.x.toFixed(1))
+      .attr("y", (d) => d.bounds.y.toFixed(1))
+      .attr("width", (d) => d.bounds.width().toFixed(1))
+      .attr("height", (d) => d.bounds.height().toFixed(1));
 
     group
       .attr("x", (d) => d.bounds.x.toFixed(1))
       .attr("y", (d) => d.bounds.y.toFixed(1))
-      .attr("width", (d) => d.bounds.width())
-      .attr("height", (d) => d.bounds.height());
-
-    label.attr("transform", (d) => {
-      const { x, y, height } = d;
-      if (
-        typeof x === "undefined" ||
-        typeof y === "undefined" ||
-        typeof height === "undefined"
-      ) {
-        return null;
-      }
-      const ty = y + margin - height / 2;
-      return `translate(${x.toFixed(1)},${ty.toFixed(1)})`;
-    });
+      .attr("width", (d) => d.bounds.width().toFixed(1))
+      .attr("height", (d) => d.bounds.height().toFixed(1));
   }
 }
