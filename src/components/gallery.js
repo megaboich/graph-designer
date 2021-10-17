@@ -1,52 +1,70 @@
 import { html } from "../dependencies.js";
 import TopPanel from "./top-panel.js";
 
+import { loadGallery } from "../data/gallery.js";
+import { chunks } from "../helpers/misc.js";
+
 /**
  * @typedef {object} Gallery
+ * -- props
+ * ...
+ * -- state
+ * @property entries {Array<GalleryEntry>}
+ * @property isLoading {Boolean}
+ * --methods
+ * ...
+ *
+ * @typedef {Gallery & VueComponent} GalleryVue
  */
 
-const examples = [
-  {
-    name: "Simple",
-    id: "simple",
-    image: "graph-samples/simple.svg",
-  },
-  {
-    name: "Ursa Major",
-    id: "ursa-major",
-    image: "graph-samples/ursa-major.svg",
-  },
-  {
-    name: "Sucrose breakdown",
-    id: "sucrose-breakdown",
-    image: "graph-samples/sucrose-breakdown.svg",
-  },
-];
-
 export default {
+  data() {
+    return {
+      /** @type {Array<GalleryEntry>} */
+      entries: [],
+      isLoading: true,
+    };
+  },
+
   /**
-   * @this {Gallery}
+   * @this {GalleryVue}
+   */
+  async mounted() {
+    this.entries = await loadGallery();
+    this.isLoading = false;
+  },
+
+  /**
+   * @this {GalleryVue}
    */
   render() {
+    const chunkedEntities = chunks(this.entries, 3);
     return html`
       <div class="gallery">
         <${TopPanel} />
         <div id="main" class="section">
-          <div class="tile is-ancestor">
-            ${examples.map((x) => {
+          <div class="tile is-ancestor is-vertical">
+            ${chunkedEntities.map((chunk) => {
               return html`
-                <div class="tile is-parent">
-                  <article class="tile is-child box">
-                    <p class="title">
-                      <a href=${`#example/${x.id}`}>${x.name}</a>
-                    </p>
+                <div class="tile">
+                  ${chunk.map((x) => {
+                    return html`
+                      <div class="tile is-4 is-parent">
+                        <a class="tile is-child box" href=${x.route}>
+                          <p class="title">${x.name}</p>
 
-                    <figure class="image is-4by3">
-                      <a href=${`#example/${x.id}`}>
-                        <img src=${x.image} />
-                      </a>
-                    </figure>
-                  </article>
+                          ${x.isExample &&
+                          html`
+                            <span class="tag is-info mb-2">Example</span>
+                          `}
+
+                          <figure class="image is-4by3">
+                            <img src=${x.preview} />
+                          </figure>
+                        </a>
+                      </div>
+                    `;
+                  })}
                 </div>
               `;
             })}

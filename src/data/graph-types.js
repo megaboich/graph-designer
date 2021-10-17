@@ -23,7 +23,7 @@
 
 /**
  * @typedef {object} GraphGroup
- * @property leaves {Array<Number>}
+ * @property leaves {Array<Number> | Array<GraphNode>}
  * @property style {string}
  * @property padding {any}
  * @property bounds {any=}
@@ -49,8 +49,11 @@
  * @typedef {object} GraphSerializedNode
  * @property id {string}
  * @property label {string}
- * @property width {number}
- * @property height {number}
+ * @property x {number=}
+ * @property y {number=}
+ * @property width {number=}
+ * @property height {number=}
+ * @property image {string=}
  */
 
 /**

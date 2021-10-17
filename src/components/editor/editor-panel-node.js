@@ -1,4 +1,5 @@
 import { html } from "../../dependencies.js";
+import { assignNodeImageAndDimensions } from "../../data/graph-helpers.js";
 
 /**
  * @typedef {object} EditorPanelNode
@@ -24,25 +25,15 @@ export default {
       this.onChange();
     };
 
-    const assignNodeImageAndDimensions = (/** @type {string } */ url) => {
-      const img = new Image();
-      img.onload = () => {
-        this.node.imageOriginalWidth = img.naturalWidth;
-        this.node.imageOriginalHeight = img.naturalHeight;
-        this.node.imageWidth = img.naturalWidth;
-        this.node.imageHeight = img.naturalHeight;
-        this.node.imageZoom = 100;
-        this.node.imageUrl = img.src;
-        this.onChange();
-      };
-      img.src = url;
-    };
-
     const onFileInputChange = (/** @type {HTMLInputEvent} */ e) => {
       if (e.target && e.target.files && e.target.files.length > 0) {
         const reader = new FileReader();
         reader.onload = (/** @type any */ e2) => {
-          assignNodeImageAndDimensions(e2.target.result);
+          assignNodeImageAndDimensions(
+            this.node,
+            e2.target.result,
+            this.onChange
+          );
         };
         if (e.target.files[0].size > 1 * 1024 * 1024) {
           throw new Error("File is too big");
@@ -52,7 +43,7 @@ export default {
     };
 
     const onUrlInputChange = (/** @type {HTMLInputEvent} */ e) => {
-      assignNodeImageAndDimensions(e.target.value);
+      assignNodeImageAndDimensions(this.node, e.target.value, this.onChange);
     };
 
     const onImageZoomChange = (/** @type {HTMLInputEvent} */ e) => {
@@ -132,7 +123,7 @@ export default {
                     />
                   </p>
                   <p class="control">
-                    <div class="file is-right">
+                    <div class="file is-right" title="Upload image">
                       <label class="file-label">
                         <input 
                           class="file-input" 

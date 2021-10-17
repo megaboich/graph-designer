@@ -10,6 +10,7 @@ import { html } from "../../dependencies.js";
  * -- props
  * @property label {String}
  * @property items {Array<DropdownItem>}
+ * @property isRight {Boolean}
  * -- state
  * @property instanceId {String}
  * @property isOpen {Boolean}
@@ -27,6 +28,7 @@ export default {
   props: {
     label: String,
     items: Array,
+    isRight: Boolean,
   },
   data() {
     return { isOpen: false };
@@ -68,7 +70,11 @@ export default {
    */
   render() {
     return html`
-      <div class=${`dropdown ${this.isOpen ? "is-active" : ""}`}>
+      <div
+        class=${`dropdown ${this.isOpen ? "is-active" : ""} ${
+          this.isRight ? "is-right" : ""
+        }`}
+      >
         <div class="dropdown-trigger">
           <button
             class="button"

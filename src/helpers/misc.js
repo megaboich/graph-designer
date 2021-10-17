@@ -16,3 +16,32 @@ export function capFirst(string) {
 export function getRandomInt(min, max) {
   return Math.round(Math.random() * (max - min)) + min;
 }
+
+/**
+ * Transforms input string to its kebab form
+ * Nice Input => nice-input
+ * @param {string} input
+ * @returns {string}
+ */
+export function kebabify(input) {
+  const id = input.toLowerCase().replace(/\W/g, "-");
+  if (!id) {
+    throw new Error("Input has no data");
+  }
+  return id;
+}
+
+/**
+ * Gets chunks from an array
+ * @param {Array<T>} arr
+ * @param {Number} n
+ * @returns {Array<Array<T>>}
+ * @template T
+ */
+export function chunks(arr, n) {
+  const res = [];
+  for (let i = 0; i < arr.length; i += n) {
+    res.push(arr.slice(i, i + n));
+  }
+  return res;
+}

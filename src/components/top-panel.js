@@ -7,6 +7,7 @@ import Modal from "./generic/modal.js";
  * -- props
  * @property isEditor {boolean}
  * @property onExportClick {(exportType: string)=>void}
+ * @property onSaveClick {Function}
  
  * -- state
  * @property isExportModalOpened {boolean}
@@ -17,6 +18,7 @@ export default {
   props: {
     isEditor: Boolean,
     onExportClick: Function,
+    onSaveClick: Function,
   },
 
   data() {
@@ -78,8 +80,13 @@ export default {
             <div class="navbar-end">
               <div class="navbar-item">
                 <${Dropdown}
+                  isRight
                   label="Menu"
                   items=${[
+                    {
+                      label: "Save to gallery",
+                      onclick: () => this.onSaveClick(),
+                    },
                     {
                       label: "Export",
                       onclick: () => {

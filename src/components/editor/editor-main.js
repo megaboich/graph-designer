@@ -7,13 +7,15 @@ import EditorPanelLinks from "./editor-panel-links.js";
 import GraphView from "./graph-view.js";
 
 import {
-  loadGraph,
   addNewNode,
   deleteNode,
   addNewLink,
   deleteLink,
   revertLink,
-} from "../../graph-data.js";
+} from "../../data/graph-manipulation.js";
+import { serializeToJSON } from "../../data/graph-serialization.js";
+import { loadGraphByRoute, saveToLocalStorage } from "../../data/gallery.js";
+import { getRandomName } from "../../helpers/get-random-name.js";
 
 /**
  * @typedef {object} Editor
@@ -28,6 +30,7 @@ import {
  * --methods
  * @property renderEditor {Function}
  * @property exportGraph {(exportType: string)=>void}
+ * @property saveGraph {Function}
  *
  * @typedef {Editor & VueComponent} EditorVue
  */
@@ -57,14 +60,7 @@ export default {
    * @this {EditorVue}
    */
   async mounted() {
-    const { route } = this;
-    let graph;
-    if (route.startsWith("example/")) {
-      const id = route.substr(8);
-      const dataUrl = `graph-samples/${id}.json`;
-      graph = await loadGraph(dataUrl);
-    }
-    this.graph = graph;
+    this.graph = await loadGraphByRoute(this.route);
     this.isLoading = false;
   },
 
@@ -77,7 +73,11 @@ export default {
 
     return html`
       <div class="editor-main">
-        <${TopPanel} isEditor onExportClick=${this.exportGraph} />
+        <${TopPanel}
+          isEditor
+          onExportClick=${this.exportGraph}
+          onSaveClick=${this.saveGraph}
+        />
         ${isLoading
           ? html`
               <div class="m-5">
@@ -109,9 +109,27 @@ export default {
             saveAs(blob, "graph.svg");
           }
           break;
-        default:
-          console.log(`Export ${exportType} is not implemented yet`);
+        case "json": {
+          if (this.graph) {
+            const json = serializeToJSON(this.graph);
+            const blob = new Blob([JSON.stringify(json)], {
+              type: "text/json;charset=utf-8",
+            });
+            saveAs(blob, "graph.json");
+          }
           break;
+        }
+        default:
+          throw new Error(`Export ${exportType} is not implemented yet`);
+      }
+    },
+
+    /**
+    @this {EditorVue}
+    */
+    async saveGraph() {
+      if (this.graph) {
+        await saveToLocalStorage(this.graph, getRandomName());
       }
     },
 
