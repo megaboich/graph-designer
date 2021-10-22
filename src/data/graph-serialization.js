@@ -26,11 +26,7 @@ export async function loadGraphFromJSON(data) {
     };
 
     if (sn.image) {
-      promises.push(
-        new Promise((resolve) => {
-          assignNodeImageAndDimensions(node, sn.image, resolve);
-        })
-      );
+      promises.push(assignNodeImageAndDimensions(node, sn.image, sn.imageZoom));
     }
     nodeLookup[node.id] = node;
     return node;
@@ -53,6 +49,14 @@ export async function loadGraphFromJSON(data) {
     return group;
   });
   graph.constraints = [];
+
+  graph.transform = data.transform || { x: 0, y: 0, k: 1 };
+
+  graph.layout = data.layout || {
+    layoutType: "auto",
+    linkDistance: 80,
+    minSeparation: 160,
+  };
 
   if (promises.length) {
     await Promise.all(promises);
@@ -79,6 +83,7 @@ export function serializeToJSON(graph) {
       x: n.x,
       y: n.y,
       image: n.imageUrl,
+      imageZoom: n.imageZoom,
     })),
     links: graph.links.map((li) => ({
       source: li.source.id,
@@ -94,6 +99,8 @@ export function serializeToJSON(graph) {
         throw new Error("Node is expected to be an object");
       }),
     })),
+    transform: graph.transform,
+    layout: graph.layout,
   };
 
   return graphJSON;

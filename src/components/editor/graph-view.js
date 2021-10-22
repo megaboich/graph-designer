@@ -42,6 +42,7 @@ export default {
     let layout;
 
     this.initializeLayout = (isUpdated = false) => {
+      this.graph.layout = this.layoutOptions;
       const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
       layout = new cola.Layout();
       layout

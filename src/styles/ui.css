@@ -52,6 +52,7 @@ body {
   height: 100%;
   overflow: auto;
   display: flex;
+  flex-direction: column;
 }
 
 #svg-main {
@@ -92,4 +93,8 @@ body {
 .node-img-url-container {
   overflow-wrap: break-word;
   max-width: 230px;
+}
+
+.no-wrap {
+  white-space: nowrap;
 }

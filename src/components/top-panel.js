@@ -6,8 +6,10 @@ import Modal from "./generic/modal.js";
  * @typedef {object} TopPanel
  * -- props
  * @property isEditor {boolean}
+ * @property isReadonly {boolean}
  * @property onExportClick {(exportType: string)=>void}
- * @property onSaveClick {Function}
+ * @property onSaveAsClick {Function}
+ * @property onDeleteClick {Function}
  
  * -- state
  * @property isExportModalOpened {boolean}
@@ -17,8 +19,10 @@ import Modal from "./generic/modal.js";
 export default {
   props: {
     isEditor: Boolean,
+    isReadonly: Boolean,
     onExportClick: Function,
-    onSaveClick: Function,
+    onSaveAsClick: Function,
+    onDeleteClick: Function,
   },
 
   data() {
@@ -31,7 +35,7 @@ export default {
    * @this {TopPanelVue}
    */
   render() {
-    const { isEditor } = this;
+    const { isEditor, isReadonly } = this;
 
     return html`
       <nav
@@ -84,8 +88,8 @@ export default {
                   label="Menu"
                   items=${[
                     {
-                      label: "Save to gallery",
-                      onclick: () => this.onSaveClick(),
+                      label: "Save as a copy",
+                      onclick: () => this.onSaveAsClick(),
                     },
                     {
                       label: "Export",
@@ -93,10 +97,17 @@ export default {
                         this.isExportModalOpened = true;
                       },
                     },
-                    {
-                      label: "Import",
-                      onclick: () => alert("Not implemented yet"),
-                    },
+                    ...(!isReadonly
+                      ? [
+                          {
+                            separator: true,
+                          },
+                          {
+                            label: "Delete",
+                            onclick: () => this.onDeleteClick(),
+                          },
+                        ]
+                      : []),
                   ]}
                 />
               </div>

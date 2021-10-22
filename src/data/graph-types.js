@@ -43,6 +43,10 @@
  * @property groups {Array<GraphGroup>}
  * @property constraints {Array<any>}
  * @property selectedNodeId {string=}
+ * @property transform {GraphTransform}
+ * @property layout {GraphLayoutOptions}
+ * @property id {String}
+ * @property isReadonly {Boolean}
  */
 
 /**
@@ -54,6 +58,7 @@
  * @property width {number=}
  * @property height {number=}
  * @property image {string=}
+ * @property imageZoom {number=}
  */
 
 /**
@@ -74,6 +79,8 @@
  * @property nodes {Array<GraphSerializedNode>}
  * @property links {Array<GraphSerializedLink>}
  * @property groups {Array<GraphSerializedGroup>}
+ * @property transform {GraphTransform}
+ * @property layout {GraphLayoutOptions}
  */
 
 /**
@@ -81,4 +88,11 @@
  * @property layoutType {string}
  * @property linkDistance {number}
  * @property minSeparation {number}
+ */
+
+/**
+ * @typedef {object} GraphTransform
+ * @property x {number}
+ * @property y {number}
+ * @property k {number}
  */

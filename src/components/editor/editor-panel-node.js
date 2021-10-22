@@ -28,12 +28,9 @@ export default {
     const onFileInputChange = (/** @type {HTMLInputEvent} */ e) => {
       if (e.target && e.target.files && e.target.files.length > 0) {
         const reader = new FileReader();
-        reader.onload = (/** @type any */ e2) => {
-          assignNodeImageAndDimensions(
-            this.node,
-            e2.target.result,
-            this.onChange
-          );
+        reader.onload = async (/** @type any */ e2) => {
+          await assignNodeImageAndDimensions(this.node, e2.target.result);
+          this.onChange();
         };
         if (e.target.files[0].size > 1 * 1024 * 1024) {
           throw new Error("File is too big");
@@ -42,8 +39,9 @@ export default {
       }
     };
 
-    const onUrlInputChange = (/** @type {HTMLInputEvent} */ e) => {
-      assignNodeImageAndDimensions(this.node, e.target.value, this.onChange);
+    const onUrlInputChange = async (/** @type {HTMLInputEvent} */ e) => {
+      await assignNodeImageAndDimensions(this.node, e.target.value);
+      this.onChange();
     };
 
     const onImageZoomChange = (/** @type {HTMLInputEvent} */ e) => {
@@ -195,6 +193,16 @@ export default {
                       <span class="icon is-small is-right">
                         <i class="fas fa-percent"></i>
                       </span>
+                    </div>
+                  </div>
+                  <div class="field pt-1 is-size-7">
+                    <div>
+                      Original:
+                      ${this.node.imageOriginalWidth}x${this.node
+                        .imageOriginalHeight}
+                    </div>
+                    <div>
+                      Scaled: ${this.node.imageWidth}x${this.node.imageHeight}
                     </div>
                   </div>
                 </div>

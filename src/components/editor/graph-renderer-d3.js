@@ -28,7 +28,7 @@ export class GraphRendererD3 {
     this.onUpdate = onUpdate;
     this.onNodeClick = onNodeClick;
     this.onBgClick = onBgClick;
-    this.transform = { x: 0, y: 0, k: 1 };
+    this.transform = graph.transform || { x: 0, y: 0, k: 1 };
     this.needsNodeSizeAdjustment = false;
 
     this.setupContainer();
@@ -114,19 +114,36 @@ export class GraphRendererD3 {
 
     const zoomHandler = (/** @type {any} */ event) => {
       const t = event.transform;
-      this.transform = t;
-      const dx = t.x.toFixed(1);
-      const dy = t.y.toFixed(1);
-      const dz = t.k.toFixed(3);
-      const svgTrans = `translate(${dx},${dy}) scale(${dz})`;
-      if (this.vis) {
-        this.vis.attr("transform", svgTrans);
-      }
+      this.graph.transform = t;
+      this.applyTransform(t);
     };
+
+    const initialTransform = d3.zoomIdentity
+      .translate(this.transform.x, this.transform.y)
+      .scale(this.transform.k);
+
+    const zoom = d3.zoom().on("zoom", zoomHandler);
 
     // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
     // @ts-ignore
-    outer.call(d3.zoom().on("zoom", zoomHandler));
+    outer.call(zoom);
+    // @ts-ignore
+    outer.call(zoom.transform, initialTransform);
+  }
+
+  /**
+   * Applies transformation to container SVG element
+   * @param {GraphTransform} t
+   */
+  applyTransform(t) {
+    this.transform = t;
+    const dx = t.x.toFixed(1);
+    const dy = t.y.toFixed(1);
+    const dz = t.k.toFixed(3);
+    const svgTrans = `translate(${dx},${dy}) scale(${dz})`;
+    if (this.vis) {
+      this.vis.attr("transform", svgTrans);
+    }
   }
 
   setupElements() {

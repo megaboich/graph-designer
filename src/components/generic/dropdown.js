@@ -2,9 +2,10 @@ import { html } from "../../dependencies.js";
 
 /**
  * @typedef {object} DropdownItem
- * @property label {String}
- * @property icon {String}
- * @property onclick {Function}
+ * @property label {String=}
+ * @property icon {String=}
+ * @property separator {Boolean=}
+ * @property onclick {Function=}
  *
  * @typedef {object} Select
  * -- props
@@ -90,17 +91,20 @@ export default {
         </div>
         <div class="dropdown-menu" id=${this.instanceId} role="menu">
           <div class="dropdown-content">
-            ${this.items.map(
-              (item) =>
-                html`
-                  <a
-                    href="javascript:void(0)"
-                    class="dropdown-item"
-                    onclick=${() => item.onclick()}
-                  >
-                    ${item.label}
-                  </a>
-                `
+            ${this.items.map((item) =>
+              item.separator
+                ? html`
+                    <hr class="dropdown-divider" />
+                  `
+                : html`
+                    <a
+                      href="javascript:void(0)"
+                      class="dropdown-item"
+                      onclick=${() => item.onclick && item.onclick()}
+                    >
+                      ${item.label}
+                    </a>
+                  `
             )}
           </div>
         </div>

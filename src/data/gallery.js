@@ -5,6 +5,15 @@ import { kebabify } from "../helpers/misc.js";
 const LOCAL_STORAGE_PREFIX = "graph-data-";
 
 /**
+ * Gets graph Url Hash route
+ * @param {String} id
+ * @returns {String}
+ */
+export function getGalleryGraphRoute(id) {
+  return `gallery/${id}`;
+}
+
+/**
  * Loads gallery data
  * @returns Promise<Array<GalleryEntry>>
  */
@@ -29,11 +38,12 @@ export async function loadGallery() {
       try {
         const data = JSON.parse(value);
         const { title } = data;
+        const id = kebabify(title);
         gallery.push({
           isExample: false,
           name: title,
           id: kebabify(title),
-          route: `#gallery/${kebabify(title)}`,
+          route: `#${getGalleryGraphRoute(id)}`,
           preview: "./src/images/no-image.svg",
         });
       } catch (ex) {
@@ -58,7 +68,10 @@ export async function loadGraphByRoute(route) {
       const response = await fetch(dataUrl);
       /** @type {GraphSerializedData} */
       const data = await response.json();
-      return loadGraphFromJSON(data);
+      const graph = await loadGraphFromJSON(data);
+      graph.id = id;
+      graph.isReadonly = true;
+      return graph;
     } catch (ex) {
       // Do something
     }
@@ -69,7 +82,10 @@ export async function loadGraphByRoute(route) {
       const dataStr =
         window.localStorage.getItem(LOCAL_STORAGE_PREFIX + id) || "";
       const data = JSON.parse(dataStr);
-      return loadGraphFromJSON(data.json);
+      const graph = await loadGraphFromJSON(data.json);
+      graph.id = id;
+      graph.isReadonly = false;
+      return graph;
     } catch (ex) {
       // Do something
     }
@@ -82,14 +98,29 @@ export async function loadGraphByRoute(route) {
  * Saves graph to local storage
  * @param {GraphData} graph
  * @param {string} title
+ * @returns {Promise<string>} new Id
  */
 export async function saveToLocalStorage(graph, title) {
   const json = serializeToJSON(graph);
+  const newId = kebabify(title);
   window.localStorage.setItem(
-    LOCAL_STORAGE_PREFIX + kebabify(title),
+    LOCAL_STORAGE_PREFIX + newId,
     JSON.stringify({
       title,
       json,
     })
   );
+  return newId;
+}
+
+/**
+ * Remove graph from local storage
+ * @param {String} graphId
+ */
+export async function removeFromLocalStorage(graphId) {
+  try {
+    window.localStorage.removeItem(LOCAL_STORAGE_PREFIX + graphId);
+  } catch (ex) {
+    // TODO: show notification maybe
+  }
 }

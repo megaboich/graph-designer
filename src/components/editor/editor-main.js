@@ -14,7 +14,12 @@ import {
   revertLink,
 } from "../../data/graph-manipulation.js";
 import { serializeToJSON } from "../../data/graph-serialization.js";
-import { loadGraphByRoute, saveToLocalStorage } from "../../data/gallery.js";
+import {
+  loadGraphByRoute,
+  saveToLocalStorage,
+  removeFromLocalStorage,
+  getGalleryGraphRoute,
+} from "../../data/gallery.js";
 import { getRandomName } from "../../helpers/get-random-name.js";
 
 /**
@@ -24,13 +29,15 @@ import { getRandomName } from "../../helpers/get-random-name.js";
  * -- state
  * @property graph {GraphData=}
  * @property isLoading {Boolean}
- * @property layoutOptions {GraphLayoutOptions}
+ * @property layoutOptions {GraphLayoutOptions=}
  * @property selectedNode {GraphNode=}
  * @property graphStructureUpdatesCount {Number}
  * --methods
  * @property renderEditor {Function}
  * @property exportGraph {(exportType: string)=>void}
- * @property saveGraph {Function}
+ * @property saveAsGraph {Function}
+ * @property deleteGraph {Function}
+ * @property loadData {Function}
  *
  * @typedef {Editor & VueComponent} EditorVue
  */
@@ -40,12 +47,8 @@ export default {
     return {
       // graph: undefined, /* Graph state variable is not known to Vue intentionally in order to prevent Vue of creating observables for the whole graph tree. This impacts performance a lot. */
       isLoading: true,
-      /** @type {GraphLayoutOptions} */
-      layoutOptions: {
-        layoutType: "auto",
-        linkDistance: 80,
-        minSeparation: 160,
-      },
+      /** @type {GraphLayoutOptions=} */
+      layoutOptions: undefined,
       /** @type {GraphNode=} */
       selectedNode: undefined,
       graphStructureUpdatesCount: 0,
@@ -60,8 +63,10 @@ export default {
    * @this {EditorVue}
    */
   async mounted() {
-    this.graph = await loadGraphByRoute(this.route);
-    this.isLoading = false;
+    this.loadData();
+    this.$watch("route", () => {
+      this.loadData();
+    });
   },
 
   /**
@@ -69,27 +74,31 @@ export default {
    * @returns {any} html
    */
   render() {
-    const { isLoading } = this;
-
     return html`
       <div class="editor-main">
         <${TopPanel}
           isEditor
+          isReadonly=${this.graph?.isReadonly}
           onExportClick=${this.exportGraph}
-          onSaveClick=${this.saveGraph}
+          onSaveAsClick=${this.saveAsGraph}
+          onDeleteClick=${this.deleteGraph}
         />
-        ${isLoading
-          ? html`
-              <div class="m-5">
-                <p>Loading...</p>
-              </div>
-            `
-          : this.renderEditor()}
+        ${this.renderEditor()}
       </div>
     `;
   },
 
   methods: {
+    /**
+     * @this {EditorVue}
+     */
+    async loadData() {
+      this.isLoading = true;
+      this.graph = await loadGraphByRoute(this.route);
+      this.layoutOptions = this.graph.layout;
+      this.isLoading = false;
+    },
+
     /**
      * @param {String} exportType
      * @this {EditorVue}
@@ -127,9 +136,20 @@ export default {
     /**
     @this {EditorVue}
     */
-    async saveGraph() {
+    async saveAsGraph() {
       if (this.graph) {
-        await saveToLocalStorage(this.graph, getRandomName());
+        const newId = await saveToLocalStorage(this.graph, getRandomName());
+        window.location.hash = getGalleryGraphRoute(newId);
+      }
+    },
+
+    /**
+    @this {EditorVue}
+    */
+    async deleteGraph() {
+      if (this.graph) {
+        await removeFromLocalStorage(this.graph.id);
+        window.location.hash = "#";
       }
     },
 
@@ -137,8 +157,12 @@ export default {
      * @this {EditorVue}
      */
     renderEditor() {
-      const { graph, layoutOptions, selectedNode } = this;
-      if (!graph) return null;
+      const { graph, layoutOptions, selectedNode, isLoading } = this;
+      if (!graph || isLoading)
+        return html`
+          <div id="left-panel">Loading</div>
+        `;
+
       return html`
         <div id="left-panel">
           <${EditorPanelLayout} layoutOptions=${layoutOptions} />
