@@ -1,112 +1,527 @@
 {
   "nodes": [
-    { "id": "node1", "label": "P" },
-    { "id": "node2", "label": "sucrose phosphate phosphatase" },
-    { "id": "node4", "label": "sucrose 6-phosphate" },
-    { "id": "node6", "label": "sucrose" },
-    { "id": "node8", "label": "invertase" },
-    { "id": "node10", "label": "fructose" },
-    { "id": "node12", "label": "fructokinase" },
-    { "id": "node14", "label": "fructose 6-phosphate" },
-    { "id": "node20", "label": "phosphoglucose isomerase" },
-    { "id": "node22", "label": "glucose 6-phosphate" },
-    { "id": "node28", "label": "glucose" },
-    { "id": "node30", "label": "hexokinase" },
-    { "id": "node33", "label": "sucrose synthase" },
-    { "id": "node36", "label": "UDP- glucose" },
-    { "id": "node38", "label": "sucrose phosphate synthase" },
-    { "id": "node41", "label": "UDP" },
-    { "id": "node44", "label": "fructose 6-phosphate" },
-    { "id": "node46", "label": "ATP" },
-    { "id": "node47", "label": "ATP" },
-    { "id": "node52", "label": "ATP" },
-    { "id": "node57", "label": "ADP" },
-    { "id": "node66", "label": "PP" },
-    { "id": "node71", "label": "UTP" },
-    { "id": "node76", "label": "UDP glucose pyrophosphorylase" },
-    { "id": "node80", "label": "glucose 1-phosphate" },
-    { "id": "node86", "label": "phospho- glucomutase (cPGM)" },
-    { "id": "node89", "label": "G1P transporter" },
-    { "id": "node90", "label": "P" },
-    { "id": "node95", "label": "P" },
-    { "id": "node102", "label": "P" },
-    { "id": "node103", "label": "P" },
-    { "id": "node104", "label": "G6P transporter" },
-    { "id": "node109", "label": "glucose 6-phosphate" },
-    { "id": "node115", "label": "phospho- glucomutase (cPGM)" },
-    { "id": "node121", "label": "glucose 1-phosphate" },
-    { "id": "node128", "label": "ADPglucose pyrophosphorylase (pAGPase)" },
-    { "id": "node130", "label": "ADP- glucose" },
-    { "id": "node136", "label": "PP" },
-    { "id": "node141", "label": "ATP" },
-    { "id": "node148", "label": "inorganic diphosphatase" },
-    { "id": "node149", "label": "P" },
-    { "id": "node156", "label": "phosphate transporter" },
-    { "id": "node158", "label": "P" },
-    { "id": "node164", "label": "starch synthase (simpl.)" },
-    { "id": "node166", "label": "ADP" },
-    { "id": "node172", "label": "starch" },
-    { "id": "node178", "label": "ATP/ADP transporter" },
-    { "id": "node179", "label": "ADP" },
-    { "id": "node184", "label": "ADP" },
-    { "id": "node189", "label": "ATP" }
+    {
+      "id": "node1",
+      "label": "P",
+      "x": -96.14260492851668,
+      "y": 1947.8089997524985
+    },
+    {
+      "id": "node2",
+      "label": "sucrose \nphosphate \nphosphatase",
+      "x": -76.57900944769783,
+      "y": 1861.3537081071681
+    },
+    {
+      "id": "node4",
+      "label": "sucrose \n6-phosphate",
+      "x": 39.285025370058115,
+      "y": 1877.6417979337205
+    },
+    {
+      "id": "node6",
+      "label": "sucrose",
+      "x": -108.76576743197818,
+      "y": 1743.6960602433198
+    },
+    {
+      "id": "node8",
+      "label": "invertase",
+      "x": -150.74089538174667,
+      "y": 1641.1882011199393
+    },
+    {
+      "id": "node10",
+      "label": "fructose",
+      "x": -194.664102335764,
+      "y": 1691.2993160703775
+    },
+    {
+      "id": "node12",
+      "label": "fructokinase",
+      "x": -320.9529379617671,
+      "y": 1688.425237054604
+    },
+    {
+      "id": "node14",
+      "label": "fructose \n6-phosphate",
+      "x": -377.15787217897264,
+      "y": 1574.3470336521123
+    },
+    {
+      "id": "node20",
+      "label": "phosphoglucose \nisomerase",
+      "x": -342.1467165639281,
+      "y": 1431.639166042695
+    },
+    {
+      "id": "node22",
+      "label": "glucose \n6-phosphate",
+      "x": -188.1856048084261,
+      "y": 1319.762633369235
+    },
+    {
+      "id": "node28",
+      "label": "glucose",
+      "x": -175.91578547530742,
+      "y": 1540.841354234299
+    },
+    {
+      "id": "node30",
+      "label": "hexokinase",
+      "x": -187.76951005692354,
+      "y": 1424.639166042695
+    },
+    {
+      "id": "node33",
+      "label": "sucrose \nsynthase",
+      "x": -49.52444816600089,
+      "y": 1696.421867827736
+    },
+    {
+      "id": "node36",
+      "label": "UDP- \nglucose",
+      "x": 73.53258320097254,
+      "y": 1658.507054033159
+    },
+    {
+      "id": "node38",
+      "label": "sucrose \nphosphate \nsynthase",
+      "x": 96.29737671792553,
+      "y": 1774.2011913909828
+    },
+    {
+      "id": "node41",
+      "label": "UDP",
+      "x": 21.249690627892893,
+      "y": 1739.0833728298048
+    },
+    {
+      "id": "node44",
+      "label": "fructose \n6-phosphate",
+      "x": 197.2945036950448,
+      "y": 1852.3504531605947
+    },
+    {
+      "id": "node46",
+      "label": "ATP",
+      "x": -253.83549271696356,
+      "y": 1396.9204150426947
+    },
+    {
+      "id": "node47",
+      "label": "ATP",
+      "x": -131.40458561747616,
+      "y": 1452.357917042695
+    },
+    {
+      "id": "node52",
+      "label": "ATP",
+      "x": -408.48599717897264,
+      "y": 1696.9965218682567
+    },
+    {
+      "id": "node57",
+      "label": "ADP",
+      "x": -354.749243821863,
+      "y": 1769.3840172173811
+    },
+    {
+      "id": "node66",
+      "label": "PP",
+      "x": 252.82294261394551,
+      "y": 1480.8372184851212
+    },
+    {
+      "id": "node71",
+      "label": "UTP",
+      "x": 256.2325210720506,
+      "y": 1588.7292862859542
+    },
+    {
+      "id": "node76",
+      "label": "UDP \nglucose \npyrophosphorylase",
+      "x": 164.45429506007625,
+      "y": 1522.555969485121
+    },
+    {
+      "id": "node80",
+      "label": "glucose \n1-phosphate",
+      "x": 130.67081987077026,
+      "y": 1330.8638189899177
+    },
+    {
+      "id": "node86",
+      "label": "phospho- \nglucomutase \n(cPGM)",
+      "x": -20.14127660032722,
+      "y": 1319.6603962030588
+    },
+    {
+      "id": "node89",
+      "label": "G1P \ntransporter",
+      "x": 174.22194022535123,
+      "y": 1178.9283362930498
+    },
+    {
+      "id": "node90",
+      "label": "P",
+      "x": 228.77408139452407,
+      "y": 1232.734974897888
+    },
+    {
+      "id": "node95",
+      "label": "P",
+      "x": 231.97058774972587,
+      "y": 1134.2095842930498
+    },
+    {
+      "id": "node102",
+      "label": "P",
+      "x": -268.40652182265154,
+      "y": 1223.6470882930498
+    },
+    {
+      "id": "node103",
+      "label": "P",
+      "x": -234.31427288676596,
+      "y": 1111.6075120700066
+    },
+    {
+      "id": "node104",
+      "label": "G6P \ntransporter",
+      "x": -196.03916839318052,
+      "y": 1178.9283362930498
+    },
+    {
+      "id": "node109",
+      "label": "glucose \n6-phosphate",
+      "x": -95.72854878315513,
+      "y": 1097.3516971107283
+    },
+    {
+      "id": "node115",
+      "label": "phospho- \nglucomutase \n(cPGM)",
+      "x": 34.64450783778836,
+      "y": 1048.2620697841978
+    },
+    {
+      "id": "node121",
+      "label": "glucose \n1-phosphate",
+      "x": 177.4564083927336,
+      "y": 1029.111921919174
+    },
+    {
+      "id": "node128",
+      "label": "ADPglucose \npyrophosphorylase \n(pAGPase)",
+      "x": 316.13761178749036,
+      "y": 879.2742971875458
+    },
+    {
+      "id": "node130",
+      "label": "ADP- \nglucose",
+      "x": 450.29689134815834,
+      "y": 971.3106446983547
+    },
+    {
+      "id": "node136",
+      "label": "PP",
+      "x": 414.53446953183453,
+      "y": 797.6633678636593
+    },
+    {
+      "id": "node141",
+      "label": "ATP",
+      "x": 245.0999603823739,
+      "y": 748.6632121230372
+    },
+    {
+      "id": "node148",
+      "label": "inorganic \ndiphosphatase",
+      "x": 496.6272621518649,
+      "y": 734.4045364599879
+    },
+    {
+      "id": "node149",
+      "label": "P",
+      "x": 580.34415760274,
+      "y": 694.137751529771
+    },
+    {
+      "id": "node156",
+      "label": "phosphate \ntransporter",
+      "x": 633.8498944179138,
+      "y": 628.3180459400477
+    },
+    {
+      "id": "node158",
+      "label": "P",
+      "x": 672.4268146023659,
+      "y": 561.0709612437622
+    },
+    {
+      "id": "node164",
+      "label": "starch \nsynthase \n(simpl.)",
+      "x": 553.0773119785789,
+      "y": 1036.2198698917884
+    },
+    {
+      "id": "node166",
+      "label": "ADP",
+      "x": 632.5406616454935,
+      "y": 1012.2901507009182
+    },
+    {
+      "id": "node172",
+      "label": "starch",
+      "x": 617.8186539814293,
+      "y": 1110.9414489994476
+    },
+    {
+      "id": "node178",
+      "label": "ATP/ADP \ntransporter",
+      "x": 190.11952141350665,
+      "y": 649.418999529771
+    },
+    {
+      "id": "node179",
+      "label": "ADP",
+      "x": 121.90088580530379,
+      "y": 694.137751529771
+    },
+    {
+      "id": "node184",
+      "label": "ADP",
+      "x": 123.4569198001792,
+      "y": 583.5992939400477
+    },
+    {
+      "id": "node189",
+      "label": "ATP",
+      "x": 219.25205783864408,
+      "y": 573.5298084880093
+    }
   ],
   "links": [
-    { "source": "node2", "target": "node1" },
-    { "source": "node4", "target": "node2" },
-    { "source": "node2", "target": "node6" },
-    { "source": "node6", "target": "node8" },
-    { "source": "node8", "target": "node10" },
-    { "source": "node12", "target": "node14" },
-    { "source": "node14", "target": "node20" },
-    { "source": "node20", "target": "node22" },
-    { "source": "node8", "target": "node28" },
-    { "source": "node28", "target": "node30" },
-    { "source": "node30", "target": "node22" },
-    { "source": "node6", "target": "node33" },
-    { "source": "node33", "target": "node10" },
-    { "source": "node33", "target": "node36" },
-    { "source": "node36", "target": "node38" },
-    { "source": "node38", "target": "node4" },
-    { "source": "node38", "target": "node41" },
-    { "source": "node41", "target": "node33" },
-    { "source": "node44", "target": "node38" },
-    { "source": "node52", "target": "node12" },
-    { "source": "node12", "target": "node57" },
-    { "source": "node46", "target": "node30" },
-    { "source": "node30", "target": "node47" },
-    { "source": "node71", "target": "node76" },
-    { "source": "node76", "target": "node66" },
-    { "source": "node76", "target": "node36" },
-    { "source": "node80", "target": "node76" },
-    { "source": "node22", "target": "node86" },
-    { "source": "node86", "target": "node80" },
-    { "source": "node95", "target": "node89" },
-    { "source": "node89", "target": "node90" },
-    { "source": "node102", "target": "node104" },
-    { "source": "node80", "target": "node89" },
-    { "source": "node104", "target": "node109" },
-    { "source": "node115", "target": "node109" },
-    { "source": "node121", "target": "node89" },
-    { "source": "node121", "target": "node115" },
-    { "source": "node121", "target": "node128" },
-    { "source": "node128", "target": "node130" },
-    { "source": "node141", "target": "node128" },
-    { "source": "node128", "target": "node136" },
-    { "source": "node136", "target": "node148" },
-    { "source": "node148", "target": "node149" },
-    { "source": "node149", "target": "node156" },
-    { "source": "node156", "target": "node158" },
-    { "source": "node130", "target": "node164" },
-    { "source": "node164", "target": "node166" },
-    { "source": "node178", "target": "node179" },
-    { "source": "node184", "target": "node178" },
-    { "source": "node178", "target": "node189" },
-    { "source": "node141", "target": "node178" },
-    { "source": "node104", "target": "node103" },
-    { "source": "node10", "target": "node12" },
-    { "source": "node164", "target": "node172" },
-    { "source": "node22", "target": "node104" }
+    {
+      "source": "node2",
+      "target": "node1"
+    },
+    {
+      "source": "node4",
+      "target": "node2"
+    },
+    {
+      "source": "node2",
+      "target": "node6"
+    },
+    {
+      "source": "node6",
+      "target": "node8"
+    },
+    {
+      "source": "node8",
+      "target": "node10"
+    },
+    {
+      "source": "node12",
+      "target": "node14"
+    },
+    {
+      "source": "node14",
+      "target": "node20"
+    },
+    {
+      "source": "node20",
+      "target": "node22"
+    },
+    {
+      "source": "node8",
+      "target": "node28"
+    },
+    {
+      "source": "node28",
+      "target": "node30"
+    },
+    {
+      "source": "node30",
+      "target": "node22"
+    },
+    {
+      "source": "node6",
+      "target": "node33"
+    },
+    {
+      "source": "node33",
+      "target": "node10"
+    },
+    {
+      "source": "node33",
+      "target": "node36"
+    },
+    {
+      "source": "node36",
+      "target": "node38"
+    },
+    {
+      "source": "node38",
+      "target": "node4"
+    },
+    {
+      "source": "node38",
+      "target": "node41"
+    },
+    {
+      "source": "node41",
+      "target": "node33"
+    },
+    {
+      "source": "node44",
+      "target": "node38"
+    },
+    {
+      "source": "node52",
+      "target": "node12"
+    },
+    {
+      "source": "node12",
+      "target": "node57"
+    },
+    {
+      "source": "node46",
+      "target": "node30"
+    },
+    {
+      "source": "node30",
+      "target": "node47"
+    },
+    {
+      "source": "node71",
+      "target": "node76"
+    },
+    {
+      "source": "node76",
+      "target": "node66"
+    },
+    {
+      "source": "node76",
+      "target": "node36"
+    },
+    {
+      "source": "node80",
+      "target": "node76"
+    },
+    {
+      "source": "node22",
+      "target": "node86"
+    },
+    {
+      "source": "node86",
+      "target": "node80"
+    },
+    {
+      "source": "node95",
+      "target": "node89"
+    },
+    {
+      "source": "node89",
+      "target": "node90"
+    },
+    {
+      "source": "node102",
+      "target": "node104"
+    },
+    {
+      "source": "node80",
+      "target": "node89"
+    },
+    {
+      "source": "node104",
+      "target": "node109"
+    },
+    {
+      "source": "node115",
+      "target": "node109"
+    },
+    {
+      "source": "node121",
+      "target": "node89"
+    },
+    {
+      "source": "node121",
+      "target": "node115"
+    },
+    {
+      "source": "node121",
+      "target": "node128"
+    },
+    {
+      "source": "node128",
+      "target": "node130"
+    },
+    {
+      "source": "node141",
+      "target": "node128"
+    },
+    {
+      "source": "node128",
+      "target": "node136"
+    },
+    {
+      "source": "node136",
+      "target": "node148"
+    },
+    {
+      "source": "node148",
+      "target": "node149"
+    },
+    {
+      "source": "node149",
+      "target": "node156"
+    },
+    {
+      "source": "node156",
+      "target": "node158"
+    },
+    {
+      "source": "node130",
+      "target": "node164"
+    },
+    {
+      "source": "node164",
+      "target": "node166"
+    },
+    {
+      "source": "node178",
+      "target": "node179"
+    },
+    {
+      "source": "node184",
+      "target": "node178"
+    },
+    {
+      "source": "node178",
+      "target": "node189"
+    },
+    {
+      "source": "node141",
+      "target": "node178"
+    },
+    {
+      "source": "node104",
+      "target": "node103"
+    },
+    {
+      "source": "node10",
+      "target": "node12"
+    },
+    {
+      "source": "node164",
+      "target": "node172"
+    },
+    {
+      "source": "node22",
+      "target": "node104"
+    }
   ],
   "groups": [
     {
@@ -167,7 +582,11 @@
     {
       "style": "fill: #ff00ff; fill-opacity: 0.3;",
       "padding": 10,
-      "members": ["node184", "node189", "node158"]
+      "members": [
+        "node184",
+        "node189",
+        "node158"
+      ]
     }
   ]
 }

@@ -30,6 +30,7 @@ export class GraphRendererD3 {
     this.onBgClick = onBgClick;
     this.transform = graph.transform || { x: 0, y: 0, k: 1 };
     this.needsNodeSizeAdjustment = false;
+    this.selectedNodeId = null;
 
     this.setupContainer();
     this.setupElements();
@@ -118,9 +119,7 @@ export class GraphRendererD3 {
       this.applyTransform(t);
     };
 
-    const initialTransform = d3.zoomIdentity
-      .translate(this.transform.x, this.transform.y)
-      .scale(this.transform.k);
+    const initialTransform = d3.zoomIdentity.translate(this.transform.x, this.transform.y).scale(this.transform.k);
 
     const zoom = d3.zoom().on("zoom", zoomHandler);
 
@@ -171,12 +170,7 @@ export class GraphRendererD3 {
       .attr("class", "group")
       .attr("style", (d) => d.style);
 
-    this.link = linksLayer
-      .selectAll(".link")
-      .data(this.graph.links)
-      .enter()
-      .append("line")
-      .attr("class", "link");
+    this.link = linksLayer.selectAll(".link").data(this.graph.links).enter().append("line").attr("class", "link");
 
     const dragNode = d3
       .drag()
@@ -217,30 +211,20 @@ export class GraphRendererD3 {
       const words = d.label.split("\n");
       const el = d3.select(this);
 
-      el.append("rect")
-        .attr("class", "node-bg")
-        .attr("width", "100%")
-        .attr("height", "100%");
+      el.append("rect").attr("class", "node-bg").attr("width", "100%").attr("height", "100%");
 
       if (d.imageUrl) {
         const image = el
           .append("image")
           .attr("href", d.imageUrl)
-          .attr(
-            "style",
-            `transform: translate(calc(50% - ${
-              (d.imageWidth || 1) / 2
-            }.001px), ${NODE_PADDING_TOP}px);`
-          )
+          .attr("style", `transform: translate(calc(50% - ${(d.imageWidth || 1) / 2}.001px), ${NODE_PADDING_TOP}px);`)
           .attr("width", d.imageWidth || 1)
           .attr("height", d.imageHeight || 1)
           .on("load", () => {
             // This adds additional repaint/reflow on image load just to fix Chrome weird behavior of not applying calc at the first rendering of the node
             image.attr(
               "style",
-              `transform: translate(calc(50% - ${
-                (d.imageWidth || 1) / 2
-              }px), ${NODE_PADDING_TOP}px);`
+              `transform: translate(calc(50% - ${(d.imageWidth || 1) / 2}px), ${NODE_PADDING_TOP}px);`
             );
           });
       }
@@ -259,10 +243,7 @@ export class GraphRendererD3 {
           .attr("x", "50%")
           .attr(
             "dy",
-            i === 0
-              ? NODE_FONT_SIZE +
-                  (d.imageUrl ? d.imageHeight || 1 + NODE_PADDING_TOP / 2 : 0)
-              : NODE_FONT_SIZE
+            i === 0 ? NODE_FONT_SIZE + (d.imageUrl ? d.imageHeight || 1 + NODE_PADDING_TOP / 2 : 0) : NODE_FONT_SIZE
           );
       }
     }
@@ -274,6 +255,13 @@ export class GraphRendererD3 {
     if (this.vis) {
       this.vis.selectAll("*").remove();
     }
+  }
+
+  /**
+   * @param {string} selectedNodeId
+   */
+  setSelectedNodeId(selectedNodeId) {
+    this.selectedNodeId = selectedNodeId;
   }
 
   update() {
@@ -293,18 +281,13 @@ export class GraphRendererD3 {
       .attr("y2", (d) => d.route.arrowStart.y.toFixed(1));
 
     /**
-     * @param d {GraphNode}
+     * @param {GraphNode} d
      * @this {SVGGraphicsElement}
      */
     function adjustNodeSize(d) {
       const bb = this.getBBox();
-      const nw =
-        Math.max(bb.width, d.imageUrl ? d.imageWidth || 1 : 0) +
-        NODE_PADDING_LEFT * 2;
-      const nh =
-        bb.height +
-        NODE_PADDING_TOP * 2 +
-        (d.imageUrl ? d.imageHeight || 1 : 0);
+      const nw = Math.max(bb.width, d.imageUrl ? d.imageWidth || 1 : 0) + NODE_PADDING_LEFT * 2;
+      const nh = bb.height + NODE_PADDING_TOP * 2 + (d.imageUrl ? d.imageHeight || 1 : 0);
       if (nw !== d.width || nh !== d.height) {
         d.width = nw;
         d.height = nh;
@@ -318,9 +301,7 @@ export class GraphRendererD3 {
     }
 
     node
-      .attr("data-selected", (d) =>
-        d.id === this.graph.selectedNodeId ? true : null
-      )
+      .attr("data-selected", (d) => (d.id === this.selectedNodeId ? true : null))
       .attr("data-fixed", (d) => (d.fixed ? true : null))
       .attr("x", (d) => d.bounds.x.toFixed(1))
       .attr("y", (d) => d.bounds.y.toFixed(1))

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "browser-sync start --server --files '.'",
-    "check": "tsc && eslint --max-warnings=0 ./src/",
+    "lint": "tsc && eslint --max-warnings=0 ./src/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Oleksandr Boiko",
@@ -17,6 +17,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-jsdoc": "^39.3.6",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.0",
     "typescript": "4.3.2",

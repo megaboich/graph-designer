@@ -1,25 +1,19 @@
 import { html } from "../../dependencies.js";
 
 /**
- * @typedef {object} DropdownItem
- * @property label {String=}
- * @property icon {String=}
- * @property separator {Boolean=}
- * @property onclick {Function=}
- *
- * @typedef {object} Select
+ * @typedef {object} Dropdown
  * -- props
- * @property label {String}
- * @property items {Array<DropdownItem>}
- * @property isRight {Boolean}
+ * @property {string} label
+ * @property {Array<DropdownItem | false>} items
+ * @property {boolean} isRight
  * -- state
- * @property instanceId {String}
- * @property isOpen {Boolean}
+ * @property {string} instanceId
+ * @property {boolean} isOpen
  * -- methods
- * @property toggleMenu {(show?: boolean)=>void}
- * @property handleGlobalClick {()=>void}
+ * @property {(show?: boolean)=>void} toggleMenu
+ * @property {()=>void} handleGlobalClick
  *
- * @typedef {Select & VueComponent} SelectVue
+ * @typedef {Dropdown & VueComponent} DropdownVue
  */
 
 let instanceCounter = 0;
@@ -36,8 +30,8 @@ export default {
   },
   methods: {
     /**
-     * @param {Boolean=} show
-     * @this {SelectVue}
+     * @param {boolean=} show
+     * @this {DropdownVue}
      */
     toggleMenu(show = undefined) {
       const newIsOpen = show !== undefined ? show : !this.isOpen;
@@ -51,7 +45,7 @@ export default {
       this.isOpen = newIsOpen;
     },
     /**
-     * @this {SelectVue}
+     * @this {DropdownVue}
      */
     handleGlobalClick() {
       this.toggleMenu(false);
@@ -59,7 +53,7 @@ export default {
   },
 
   /**
-   * @this {SelectVue}
+   * @this {DropdownVue}
    */
   beforeMount() {
     this.instanceId = `drop${instanceCounter}`;
@@ -67,15 +61,11 @@ export default {
   },
 
   /**
-   * @this {SelectVue}
+   * @this {DropdownVue}
    */
   render() {
     return html`
-      <div
-        class=${`dropdown ${this.isOpen ? "is-active" : ""} ${
-          this.isRight ? "is-right" : ""
-        }`}
-      >
+      <div class=${`dropdown ${this.isOpen ? "is-active" : ""} ${this.isRight ? "is-right" : ""}`}>
         <div class="dropdown-trigger">
           <button
             class="button"
@@ -91,21 +81,20 @@ export default {
         </div>
         <div class="dropdown-menu" id=${this.instanceId} role="menu">
           <div class="dropdown-content">
-            ${this.items.map((item) =>
-              item.separator
+            ${this.items.map((item) => {
+              if (!item) {
+                return undefined;
+              }
+              return item.separator
                 ? html`
                     <hr class="dropdown-divider" />
                   `
                 : html`
-                    <a
-                      href="javascript:void(0)"
-                      class="dropdown-item"
-                      onclick=${() => item.onclick && item.onclick()}
-                    >
+                    <a href="javascript:void(0)" class="dropdown-item" onclick=${() => item.onclick && item.onclick()}>
                       ${item.label}
                     </a>
-                  `
-            )}
+                  `;
+            })}
           </div>
         </div>
       </div>

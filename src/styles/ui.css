@@ -34,10 +34,13 @@ body {
 
 #top-panel {
   grid-area: top-panel;
-  background-color: #ccc;
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+#top-panel .navbar {
+  flex-grow: 1;
 }
 
 #left-panel {
@@ -97,4 +100,8 @@ body {
 
 .no-wrap {
   white-space: nowrap;
+}
+
+.flex-grow-0 {
+ flex-grow: 0;
 }

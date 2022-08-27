@@ -7,9 +7,9 @@ import { createApp, html } from "./dependencies.js";
 /**
  * @typedef {object} MainComponent
  * -- state
- * @property route {String}
+ * @property {string} route
  * -- methods
- * @property handleWindowHashChange {()=>void}
+ * @property {()=>void} handleWindowHashChange
  */
 
 const rootComponent = {
@@ -24,7 +24,7 @@ const rootComponent = {
      * @this {MainComponent}
      */
     handleWindowHashChange() {
-      this.route = window.location.hash ? window.location.hash.substr(1) : "";
+      this.route = window.location.hash ? window.location.hash.substring(1) : "";
     },
   },
 
@@ -37,6 +37,7 @@ const rootComponent = {
   },
 
   /**
+   * Very simple routing - good enough for such simple app
    * @this {MainComponent}
    */
   render() {

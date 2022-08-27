@@ -18,6 +18,16 @@ export function getRandomInt(min, max) {
 }
 
 /**
+ * Gets chunks from an array
+ * @template T
+ * @param {T[]} arr
+ * @returns {T} result
+ */
+export function pickRandomElement(arr) {
+  return arr[getRandomInt(0, arr.length - 1)];
+}
+
+/**
  * Transforms input string to its kebab form
  * Nice Input => nice-input
  * @param {string} input
@@ -33,10 +43,10 @@ export function kebabify(input) {
 
 /**
  * Gets chunks from an array
- * @param {Array<T>} arr
- * @param {Number} n
- * @returns {Array<Array<T>>}
  * @template T
+ * @param {T[]} arr
+ * @param {Number} n
+ * @returns {T[][]}
  */
 export function chunks(arr, n) {
   const res = [];

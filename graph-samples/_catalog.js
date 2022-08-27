@@ -1,16 +1,19 @@
 export default [
   {
-    name: "Simple",
+    title: "Simple",
+    id: "simple",
     data: "simple.json",
     preview: "simple.svg",
   },
   {
-    name: "Ursa Major",
+    title: "Ursa Major",
+    id: "ursa-major",
     data: "ursa-major.json",
     preview: "ursa-major.svg",
   },
   {
-    name: "Sucrose breakdown",
+    title: "Sucrose breakdown",
+    id: "sucrose-breakdown",
     data: "sucrose-breakdown.json",
     preview: "sucrose-breakdown.svg",
   },

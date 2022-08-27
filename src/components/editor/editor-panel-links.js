@@ -3,17 +3,17 @@ import { html } from "../../dependencies.js";
 /**
  * @typedef {object} EditorPanelLinks
  * -- props
- * @property node {GraphNode}
- * @property graph {GraphData}
- * @property onNavigate {Function}
- * @property onDeleteLink {Function}
- * @property onRevertLink {Function}
+ * @property {GraphNode} node
+ * @property {GraphData} graph
+ * @property {Function} onNavigate
+ * @property {Function} onDeleteLink
+ * @property {Function} onRevertLink
  */
 
 /**
  * @param {GraphLink} link
  * @param {String} nodeId
- * @this EditorPanelLinks
+ * @this {EditorPanelLinks}
  */
 function renderLinkNavigation(link, nodeId) {
   return html`
@@ -48,14 +48,12 @@ function renderLinkNavigation(link, nodeId) {
 /**
  * @param {GraphLink} link
  * @param {String} nodeId
- * @this EditorPanelLinks
+ * @this {EditorPanelLinks}
  */
 function renderLink(link, nodeId) {
   return html`
     <div class="level mb-1">
-      <div class="level-left">
-        ${renderLinkNavigation.call(this, link, nodeId)}
-      </div>
+      <div class="level-left">${renderLinkNavigation.call(this, link, nodeId)}</div>
       <div class="level-right">
         <div class="level-item buttons">
           <button
@@ -116,8 +114,7 @@ export default {
         <p class="panel-heading is-small">Connections</p>
         <div class="panel-block">
           <div class="flex-column">
-            ${inLinks.map((l) => renderLink.call(this, l, id))}
-            ${outLinks.map((l) => renderLink.call(this, l, id))}
+            ${inLinks.map((l) => renderLink.call(this, l, id))} ${outLinks.map((l) => renderLink.call(this, l, id))}
           </div>
         </div>
       </nav>

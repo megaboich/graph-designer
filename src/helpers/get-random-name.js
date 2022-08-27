@@ -1,7 +1,7 @@
-import { capFirst, getRandomInt } from "./misc.js";
+import { capFirst, pickRandomElement } from "./misc.js";
 
 export function getRandomName() {
-  const name1 = [
+  const adjectives = [
     "abandoned",
     "able",
     "absolute",
@@ -1352,7 +1352,7 @@ export function getRandomName() {
     "rocky",
   ];
 
-  const name2 = [
+  const nouns = [
     "people",
     "history",
     "way",
@@ -2856,8 +2856,8 @@ export function getRandomName() {
     "Lieuwe",
   ];
 
-  const name = `${capFirst(
-    name1[getRandomInt(0, name1.length - 1)]
-  )} ${capFirst(name2[getRandomInt(0, name2.length - 1)])}`;
+  const p1 = capFirst(pickRandomElement(adjectives));
+  const p2 = capFirst(pickRandomElement(nouns));
+  const name = `${p1} ${p2}`;
   return name;
 }

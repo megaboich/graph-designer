@@ -6,7 +6,7 @@ import { assignNodeImageAndDimensions } from "./graph-helpers.js";
  * @returns Promise<GraphData>
  */
 export async function loadGraphFromJSON(data) {
-  /** @type {{[key: string]: GraphNode}} */
+  /** @type {Object<string,GraphNode>} */
   const nodeLookup = {};
   /** @type {GraphData} */
   const graph = {};
@@ -14,7 +14,7 @@ export async function loadGraphFromJSON(data) {
   /** @type {Array<Promise<void>>} */
   const promises = [];
   graph.nodes = data.nodes.map((sn, i) => {
-    /** @type GraphNode */
+    /** @type {GraphNode} */
     const node = {
       id: sn.id || sn.label,
       label: sn.label,

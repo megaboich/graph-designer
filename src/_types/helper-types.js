@@ -1,4 +1,4 @@
 /**
  * @typedef {object} HTMLInputEvent
- * @property target {HTMLInputElement}
+ * @property {HTMLInputElement} target
  */

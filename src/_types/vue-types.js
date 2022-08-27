@@ -1,5 +1,5 @@
 /**
  * @typedef {object} VueComponent
- * @property $watch {Function}
- * @property $forceUpdate {Function}
+ * @property {Function} $watch
+ * @property {Function} $forceUpdate
  */

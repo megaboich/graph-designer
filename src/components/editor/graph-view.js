@@ -4,15 +4,15 @@ import { cola } from "../../dependencies.js";
 /**
  * @typedef {object} GraphView
  * -- props
- * @property graph {GraphData}
- * @property layoutOptions {GraphLayoutOptions}
- * @property graphStructureUpdatesCount {Number}
- * @property onNodeClick {Function}
- * @property selectedNode {GraphNode}
- * @property onBgClick {Function}
+ * @property {GraphData} graph
+ * @property {GraphLayoutOptions} layoutOptions
+ * @property {number} graphStructureUpdatesCount
+ * @property {Function} onNodeClick
+ * @property {GraphNode} selectedNode
+ * @property {Function} onBgClick
  * -- methods
- * @property initializeLayout {(isUpdated?: boolean)=>void}
- * @property restartLayout {()=>void}
+ * @property {(isUpdated?: boolean)=>void} initializeLayout
+ * @property {()=>void} restartLayout
  *
  * @typedef {GraphView & VueComponent} GraphViewVue
  */
@@ -109,7 +109,7 @@ export default {
     setInterval(() => {
       if (needsUpdate) {
         layout.tick();
-        graph.selectedNodeId = this.selectedNode && this.selectedNode.id;
+        render.setSelectedNodeId(this.selectedNode && this.selectedNode.id);
         render.update();
       }
     }, 1000 / 60 /** 60fps */);

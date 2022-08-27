@@ -4,6 +4,15 @@ module.exports = {
     sourceType: "module",
   },
   extends: ["eslint:recommended", "airbnb-base", "plugin:prettier/recommended"],
+  plugins: ["jsdoc"],
+  settings: {
+    jsdoc: {
+      /*
+       * Could be "typescript", "closure", "jsdoc" or "permissive" to try to be as accommodating to any of the styles.
+       */
+      mode: "permissive",
+    },
+  },
   rules: {
     "import/extensions": "off",
     "import/no-unresolved": "off",
@@ -11,6 +20,12 @@ module.exports = {
     "no-plusplus": "off",
     "no-param-reassign": "off",
     "no-restricted-syntax": "off",
+
+    "jsdoc/valid-types": 1,
+    "jsdoc/check-syntax": 1,
+    "jsdoc/require-param-type": 1,
+    "jsdoc/require-property-type": 1,
+    "jsdoc/require-returns-type": 1,
   },
   env: {
     browser: true,

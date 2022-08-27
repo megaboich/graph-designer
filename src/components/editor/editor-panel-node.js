@@ -4,9 +4,9 @@ import { assignNodeImageAndDimensions } from "../../data/graph-helpers.js";
 /**
  * @typedef {object} EditorPanelNode
  * -- props
- * @property node {GraphNode}
- * @property graph {GraphData}
- * @property onChange {Function}
+ * @property {GraphNode} node
+ * @property {GraphData} graph
+ * @property {Function} onChange
  */
 
 export default {
@@ -28,7 +28,7 @@ export default {
     const onFileInputChange = (/** @type {HTMLInputEvent} */ e) => {
       if (e.target && e.target.files && e.target.files.length > 0) {
         const reader = new FileReader();
-        reader.onload = async (/** @type any */ e2) => {
+        reader.onload = async (/** @type {any} */ e2) => {
           await assignNodeImageAndDimensions(this.node, e2.target.result);
           this.onChange();
         };
@@ -48,12 +48,8 @@ export default {
       const number = Number(e.target.value);
       if (!Number.isNaN(number)) {
         this.node.imageZoom = number;
-        this.node.imageWidth = Math.round(
-          ((this.node.imageOriginalWidth || 1) * number) / 100
-        );
-        this.node.imageHeight = Math.round(
-          ((this.node.imageOriginalHeight || 1) * number) / 100
-        );
+        this.node.imageWidth = Math.round(((this.node.imageOriginalWidth || 1) * number) / 100);
+        this.node.imageHeight = Math.round(((this.node.imageOriginalHeight || 1) * number) / 100);
         this.onChange();
       }
     };
@@ -73,9 +69,7 @@ export default {
       this.onChange();
     };
 
-    const textLinesCount = this.node.label
-      ? this.node.label.split(`\n`).length
-      : 1;
+    const textLinesCount = this.node.label ? this.node.label.split(`\n`).length : 1;
 
     return html`
       <nav class="panel">
@@ -196,14 +190,8 @@ export default {
                     </div>
                   </div>
                   <div class="field pt-1 is-size-7">
-                    <div>
-                      Original:
-                      ${this.node.imageOriginalWidth}x${this.node
-                        .imageOriginalHeight}
-                    </div>
-                    <div>
-                      Scaled: ${this.node.imageWidth}x${this.node.imageHeight}
-                    </div>
+                    <div>Original: ${this.node.imageOriginalWidth}x${this.node.imageOriginalHeight}</div>
+                    <div>Scaled: ${this.node.imageWidth}x${this.node.imageHeight}</div>
                   </div>
                 </div>
               </div>

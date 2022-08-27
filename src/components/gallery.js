@@ -9,8 +9,8 @@ import { chunks } from "../helpers/misc.js";
  * -- props
  * ...
  * -- state
- * @property entries {Array<GalleryEntry>}
- * @property isLoading {Boolean}
+ * @property {GalleryItem[]} entries
+ * @property {Boolean} isLoading
  * --methods
  * ...
  *
@@ -20,7 +20,7 @@ import { chunks } from "../helpers/misc.js";
 export default {
   data() {
     return {
-      /** @type {Array<GalleryEntry>} */
+      /** @type {GalleryItem[]} */
       entries: [],
       isLoading: true,
     };
@@ -41,9 +41,26 @@ export default {
     const chunkedEntities = chunks(this.entries, 3);
     return html`
       <div class="gallery">
-        <${TopPanel} />
+        <div id="top-panel">
+          <${TopPanel}
+            topRightMenuItems=${[
+              {
+                label: "Import",
+                // eslint-disable-next-line no-alert
+                onclick: () => alert("Not yet implemented!"),
+              },
+              {
+                separator: true,
+              },
+              {
+                label: "Create new empty graph",
+                onclick: () => {},
+              },
+            ]}
+          />
+        </div>
         <div id="main" class="section">
-          <div class="tile is-ancestor is-vertical">
+          <div class="tile is-ancestor is-vertical flex-grow-0">
             ${chunkedEntities.map((chunk) => {
               return html`
                 <div class="tile">
@@ -51,11 +68,17 @@ export default {
                     return html`
                       <div class="tile is-4 is-parent">
                         <a class="tile is-child box" href=${x.route}>
-                          <p class="title">${x.name}</p>
+                          <p class="title">${x.title}</p>
 
                           ${x.isExample &&
                           html`
                             <span class="tag is-info mb-2">Example</span>
+                          `}
+                          ${x.updateDate &&
+                          html`
+                            <span class="tag is-light mb-2">
+                              ${x.updateDate.toLocaleDateString()} ${x.updateDate.toLocaleTimeString()}
+                            </span>
                           `}
 
                           <figure class="image is-4by3">

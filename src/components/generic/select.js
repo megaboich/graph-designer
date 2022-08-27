@@ -3,9 +3,9 @@ import { html } from "../../dependencies.js";
 /**
  * @typedef {object} Select
  * -- props
- * @property value {String}
- * @property options {Array<{value: string, text: string}>}
- * @property onchange {(value: string) => void}
+ * @property {string} value
+ * @property {Array<{value: string, text: string}>} options
+ * @property {(value: string) => void} onchange
  *
  * @typedef {Select & VueComponent} SelectVue
  */
@@ -23,18 +23,13 @@ export default {
   render() {
     return html`
       <select
-        onchange=${(/** @type HTMLInputEvent */ e) => {
+        onchange=${(/** @type {HTMLInputEvent} */ e) => {
           this.onchange(e.target.value);
         }}
       >
         ${this.options.map(
           (option) => html`
-            <option
-              selected=${this.value === option.value}
-              value="${option.value}"
-            >
-              ${option.text}
-            </option>
+            <option selected=${this.value === option.value} value="${option.value}">${option.text}</option>
           `
         )}
       </select>

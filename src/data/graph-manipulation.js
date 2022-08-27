@@ -9,7 +9,7 @@ import { getRandomInt } from "../helpers/misc.js";
  * @param {any} attrs
  */
 export function addNewNode(graph, linkToId, attrs = {}) {
-  /** @type GraphNode */
+  /** @type {GraphNode} */
   const node = {
     index: graph.nodes.length,
     id: getNewNodeId(graph),
@@ -29,10 +29,7 @@ export function addNewNode(graph, linkToId, attrs = {}) {
         target: node,
       });
       if (typeof node.x === "undefined" && typeof node.y === "undefined") {
-        if (
-          typeof source.x !== "undefined" &&
-          typeof source.y !== "undefined"
-        ) {
+        if (typeof source.x !== "undefined" && typeof source.y !== "undefined") {
           node.x = source.x + getRandomInt(-50, 50);
           node.y = source.y + getRandomInt(-50, 50);
         }
@@ -73,9 +70,7 @@ export function deleteNode(graph, nodeId) {
  */
 export function addNewLink(graph, sourceId, targetId) {
   // Check if this links exists already
-  const existing = graph.links.find(
-    (l) => l.source.id === sourceId && l.target.id === targetId
-  );
+  const existing = graph.links.find((l) => l.source.id === sourceId && l.target.id === targetId);
   if (existing) {
     return false;
   }
@@ -101,10 +96,7 @@ export function addNewLink(graph, sourceId, targetId) {
 export function deleteLink(graph, linkToDelete) {
   for (let i = 0; i < graph.links.length; ++i) {
     const link = graph.links[i];
-    if (
-      link.source.id === linkToDelete.source.id &&
-      link.target.id === linkToDelete.target.id
-    ) {
+    if (link.source.id === linkToDelete.source.id && link.target.id === linkToDelete.target.id) {
       graph.links.splice(i, 1);
       i--;
     }

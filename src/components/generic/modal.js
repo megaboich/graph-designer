@@ -1,8 +1,8 @@
 /**
  * @typedef {object} Modal
  * -- props
- * @property title {String}
- * @property onclose {() => void}
+ * @property {string} title
+ * @property {() => void} onclose
  *
  * @typedef {Modal & VueComponent} ModalVue
  */
@@ -15,7 +15,7 @@ export default {
   },
 
   /**
-   * This component is using Vuew templating instead of HTM because of
+   * This component is using Vuew templating instead of HTM because of problems handling slots
    * https://github.com/developit/htm/issues/217
    */
   template: `

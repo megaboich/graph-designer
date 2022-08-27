@@ -1,98 +1,95 @@
 /**
  * @typedef {object} GraphNode
- * @property id {string}
- * @property label {string}
- * @property index {number}
- * @property x {number=}
- * @property y {number=}
- * @property width {number=}
- * @property height {number=}
- * @property rx {number=}
- * @property ry {number=}
- * @property bounds {any=}
- * @property hardWidth {number=}
- * @property hardHeight {number=}
- * @property fixed {number=}
- * @property imageUrl {string=}
- * @property imageOriginalWidth {number=}
- * @property imageOriginalHeight {number=}
- * @property imageZoom {number=}
- * @property imageWidth {number=}
- * @property imageHeight {number=}
+ * @property {string} id
+ * @property {string} label
+ * @property {number} index
+ * @property {number=} x
+ * @property {number=} y
+ * @property {number=} width
+ * @property {number=} height
+ * @property {number=} rx
+ * @property {number=} ry
+ * @property {any=} bounds
+ * @property {number=} hardWidth
+ * @property {number=} hardHeight
+ * @property {number=} fixed
+ * @property {string=} imageUrl
+ * @property {number=} imageOriginalWidth
+ * @property {number=} imageOriginalHeight
+ * @property {number=} imageZoom
+ * @property {number=} imageWidth
+ * @property {number=} imageHeight
  */
 
 /**
  * @typedef {object} GraphGroup
- * @property leaves {Array<Number> | Array<GraphNode>}
- * @property style {string}
- * @property padding {any}
- * @property bounds {any=}
+ * @property {Array<Number> | Array<GraphNode>} leaves
+ * @property {string} style
+ * @property {any} padding
+ * @property {any=} bounds
  */
 
 /**
  * @typedef {object} GraphLink
- * @property source {GraphNode}
- * @property target {GraphNode}
- * @property route {any=}
+ * @property {GraphNode} source
+ * @property {GraphNode} target
+ * @property {any=} route
  */
 
 /**
  * @typedef {object} GraphData
- * @property nodes {Array<GraphNode>}
- * @property links {Array<GraphLink>}
- * @property groups {Array<GraphGroup>}
- * @property constraints {Array<any>}
- * @property selectedNodeId {string=}
- * @property transform {GraphTransform}
- * @property layout {GraphLayoutOptions}
- * @property id {String}
- * @property isReadonly {Boolean}
+ * @property {Array<GraphNode>} nodes
+ * @property {Array<GraphLink>} links
+ * @property {Array<GraphGroup>} groups
+ * @property {Array<any>} constraints
+ * @property {GraphTransform} transform
+ * @property {GraphLayoutOptions} layout
  */
 
 /**
  * @typedef {object} GraphSerializedNode
- * @property id {string}
- * @property label {string}
- * @property x {number=}
- * @property y {number=}
- * @property width {number=}
- * @property height {number=}
- * @property image {string=}
- * @property imageZoom {number=}
+ * @property {string} id
+ * @property {string} label
+ * @property {number=} x
+ * @property {number=} y
+ * @property {number=} width
+ * @property {number=} height
+ * @property {string=} image
+ * @property {number=} imageZoom
  */
 
 /**
  * @typedef {object} GraphSerializedLink
- * @property source {string}
- * @property target {string}
+ * @property {string} source
+ * @property {string} target
  */
 
 /**
  * @typedef {object} GraphSerializedGroup
- * @property members {Array<string>}
- * @property style {string}
- * @property padding {any}
+ * @property {Array<string>} members
+ * @property {string} style
+ * @property {any} padding
  */
 
 /**
  * @typedef {object} GraphSerializedData
- * @property nodes {Array<GraphSerializedNode>}
- * @property links {Array<GraphSerializedLink>}
- * @property groups {Array<GraphSerializedGroup>}
- * @property transform {GraphTransform}
- * @property layout {GraphLayoutOptions}
+ * @property {Array<GraphSerializedNode>} nodes
+ * @property {Array<GraphSerializedLink>} links
+ * @property {Array<GraphSerializedGroup>} groups
+ * @property {GraphTransform} transform
+ * @property {GraphLayoutOptions} layout
  */
 
 /**
  * @typedef {object} GraphLayoutOptions
- * @property layoutType {string}
- * @property linkDistance {number}
- * @property minSeparation {number}
+ * @property {string} layoutType
+ * @property {number} linkDistance
+ * @property {number} minSeparation
  */
 
 /**
  * @typedef {object} GraphTransform
- * @property x {number}
- * @property y {number}
- * @property k {number}
+ * @property {number} x
+ * @property {number} y
+ * @property {number} k
  */

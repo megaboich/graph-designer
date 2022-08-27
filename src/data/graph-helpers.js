@@ -1,4 +1,40 @@
 /**
+ *
+ * @param {string} imgUrl
+ * @returns
+ */
+export async function getImageBase64ByUrl(imgUrl) {
+  if (!imgUrl) {
+    return "";
+  }
+  return new Promise((resolve) => {
+    const imgElt = document.createElement("img");
+    imgElt.addEventListener("load", () => {
+      try {
+        const canvasElt = document.createElement("canvas");
+        canvasElt.width = 64;
+        canvasElt.height = 64;
+        const ctx = canvasElt.getContext("2d");
+        if (!ctx) {
+          resolve("");
+          return;
+        }
+        ctx.drawImage(imgElt, 0, 0, 64, 64);
+        const dataURL = canvasElt.toDataURL("image/jpeg", 0.75);
+        resolve(dataURL);
+      } catch (ex) {
+        resolve("");
+      }
+    });
+    imgElt.addEventListener("error", () => {
+      resolve("");
+    });
+    imgElt.setAttribute("crossOrigin", "Anonymous");
+    imgElt.setAttribute("src", imgUrl);
+  });
+}
+
+/**
  * Loads image dimenstions from url and assigns it to node
  * @param {GraphNode} node
  * @param {String | undefined} url
@@ -36,7 +72,7 @@ export function getNewNodeId(graph) {
    */
   const formatId = (x) => `n${x}`;
 
-  /** @type {{[key: string]: boolean}} */
+  /** @type {Object<string, boolean>} */
   const idLookup = {};
   graph.nodes.forEach((node) => {
     idLookup[node.id] = true;
@@ -47,4 +83,22 @@ export function getNewNodeId(graph) {
     ++inc;
   }
   return formatId(inc);
+}
+
+/**
+ * Gets graph image as SVG
+ * @param  {boolean} isPreview
+ * @returns string
+ */
+export function getGraphSvgImage(isPreview = false) {
+  const svgEl = document.getElementById("svg-main");
+  if (!svgEl) {
+    return "";
+  }
+  let svgBody = svgEl.outerHTML;
+
+  if (isPreview) {
+    svgBody = svgBody.replace("svg", 'svg viewBox="50,50,1024,768"');
+  }
+  return svgBody;
 }
