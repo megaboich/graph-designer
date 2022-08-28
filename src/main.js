@@ -1,18 +1,19 @@
-import GraphEditor from "./components/editor/editor-main.js";
-import Gallery from "./components/gallery.js";
-import About from "./components/about.js";
+import { EditorMain } from "./components/editor/editor-main.js";
+import { Gallery } from "./components/gallery.js";
+import { About } from "./components/about.js";
 
 import { createApp, html } from "./dependencies.js";
 
 /**
- * @typedef {object} MainComponent
- * -- state
- * @property {string} route
- * -- methods
- * @property {()=>void} handleWindowHashChange
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-const rootComponent = {
+const component = {
+  props: {},
+
   data() {
     return {
       route: "",
@@ -20,17 +21,13 @@ const rootComponent = {
   },
 
   methods: {
-    /**
-     * @this {MainComponent}
-     */
+    /** @this {ThisVueComponent} */
     handleWindowHashChange() {
       this.route = window.location.hash ? window.location.hash.substring(1) : "";
     },
   },
 
-  /**
-   * @this {MainComponent}
-   */
+  /** @this {ThisVueComponent} */
   async mounted() {
     window.addEventListener("hashchange", this.handleWindowHashChange);
     this.handleWindowHashChange();
@@ -38,7 +35,7 @@ const rootComponent = {
 
   /**
    * Very simple routing - good enough for such simple app
-   * @this {MainComponent}
+   * @this {ThisVueComponent}
    */
   render() {
     const { route } = this;
@@ -53,13 +50,13 @@ const rootComponent = {
       `;
     }
     return html`
-      <${GraphEditor} route=${route} />
+      <${EditorMain} route=${route} />
     `;
   },
 };
 
 async function initApp() {
-  const app = createApp(rootComponent);
+  const app = createApp(component);
   app.mount(document.body);
 }
 

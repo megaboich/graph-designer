@@ -2,47 +2,42 @@ import { GraphRendererD3 } from "./graph-renderer-d3.js";
 import { cola } from "../../dependencies.js";
 
 /**
- * @typedef {object} GraphView
- * -- props
- * @property {GraphData} graph
- * @property {GraphLayoutOptions} layoutOptions
- * @property {number} graphStructureUpdatesCount
- * @property {Function} onNodeClick
- * @property {GraphNode} selectedNode
- * @property {Function} onBgClick
- * -- methods
- * @property {(isUpdated?: boolean)=>void} initializeLayout
- * @property {()=>void} restartLayout
- *
- * @typedef {GraphView & VueComponent} GraphViewVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+/**
+ * Cola layout object is intentionally not a state variable because
+ * Vue creates observable wrappers recursively which is a performance kill
+ * @type {any}
+ * */
+let layout;
+
+const component = {
   props: {
-    graph: Object,
-    layoutOptions: Object,
-    graphStructureUpdatesCount: Number,
-    onNodeClick: Function,
-    onBgClick: Function,
-    selectedNode: Object,
+    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
+    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
+    layoutOptions: /** @type {GraphLayoutOptions} */ (/** @type {any} */ (Object)),
+    graphStructureUpdatesCount: /** @type {number} */ (/** @type {any} */ (Number)),
+    onNodeClick: /** @type {(event: any, node: GraphNode) => void} */ (/** @type {any} */ (Function)),
+    onBgClick: /** @type {(flags: any) => void} */ (/** @type {any} */ (Function)),
+    selectedNode: /** @type {GraphNode} */ (/** @type {any} */ (Object)),
   },
 
-  template: `
-    <div v-once id="main"></div>
-  `,
+  data() {
+    return {
+      needsUpdate: false,
+      timerId: -1,
+    };
+  },
 
-  /**
-   * @this {GraphViewVue}
-   */
-  mounted() {
-    const { graph } = this;
-
-    let needsUpdate = false;
-    /** @type {any} */
-    let layout;
-
-    this.initializeLayout = (isUpdated = false) => {
-      this.graph.layout = this.layoutOptions;
+  methods: {
+    /** @this {ThisVueComponent} */
+    initializeLayout(isUpdated = false) {
+      const { graph } = this;
+      graph.layout = this.layoutOptions;
       const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
       layout = new cola.Layout();
       layout
@@ -60,10 +55,10 @@ export default {
         })
         .avoidOverlaps(true)
         .on(cola.EventType.start, () => {
-          needsUpdate = true;
+          this.needsUpdate = true;
         })
         .on(cola.EventType.end, () => {
-          needsUpdate = false;
+          this.needsUpdate = false;
         });
 
       if (layoutType === "flow-x") {
@@ -76,18 +71,28 @@ export default {
       layout.kick = () => {};
       layout.start(0, 0, isUpdated ? 0 : 30, 0, true, !isUpdated);
       layout.tick();
-    };
+    },
 
-    this.restartLayout = () => {
+    /** @this {ThisVueComponent} */
+    restartLayout() {
       this.initializeLayout(true);
-    };
+    },
+  },
+
+  template: `
+    <div v-once id="main"></div>
+  `,
+
+  /** @this {ThisVueComponent} */
+  mounted() {
+    const { graph } = this;
 
     this.initializeLayout();
 
     const render = new GraphRendererD3({
       graph,
       onUpdate: (/** @type {Boolean} */ forceLayout) => {
-        needsUpdate = true;
+        this.needsUpdate = true;
         if (forceLayout) {
           layout.start(0, 0, 0, 0, true, false);
         } else {
@@ -96,18 +101,18 @@ export default {
       },
       onNodeClick: (event, node) => {
         this.onNodeClick(event, node);
-        needsUpdate = true;
+        this.needsUpdate = true;
       },
       onBgClick: (flags) => {
         this.onBgClick(flags);
-        needsUpdate = true;
+        this.needsUpdate = true;
       },
     });
 
     render.update();
 
-    setInterval(() => {
-      if (needsUpdate) {
+    this.timerId = setInterval(() => {
+      if (this.needsUpdate) {
         layout.tick();
         render.setSelectedNodeId(this.selectedNode && this.selectedNode.id);
         render.update();
@@ -122,7 +127,23 @@ export default {
       render.update();
     });
     this.$watch("selectedNode", () => {
-      needsUpdate = true;
+      this.needsUpdate = true;
     });
   },
+
+  /** @this {ThisVueComponent} */
+  unmounted() {
+    clearInterval(this.timerId);
+
+    /**
+     * Because `layout` is not a part of Vue component
+     * it is just a variable which is shared between component lifecycles
+     * So better to clean it when component creates and destroys
+     * Also this design works only if there is only a single instance of this component on the page
+     */
+    layout = undefined;
+  },
 };
+
+export default component;
+export { component as GraphView };

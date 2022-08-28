@@ -1,24 +1,25 @@
 import { html } from "../../dependencies.js";
 
 /**
- * @typedef {object} Select
- * -- props
- * @property {string} value
- * @property {Array<{value: string, text: string}>} options
- * @property {(value: string) => void} onchange
- *
- * @typedef {Select & VueComponent} SelectVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   name: "Select",
   props: {
-    value: String,
-    options: Object,
-    onchange: Function,
+    value: /** @type {string} */ (/** @type {any} */ (String)),
+    options: /** @type {{value: string, text: string}[]} */ (/** @type {any} */ (Array)),
+    onchange: /** @type {(value: string) => void} */ (/** @type {any} */ (Function)),
   },
+  data() {
+    return {};
+  },
+  methods: {},
   /**
-   * @this {SelectVue}
+   * @this {ThisVueComponent}
    */
   render() {
     return html`
@@ -36,3 +37,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as Select };

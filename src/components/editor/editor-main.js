@@ -1,14 +1,21 @@
 import { html } from "../../dependencies.js";
 
-import EditorPanelProperties from "./editor-panel-properties.js";
-import EditorPanelNode from "./editor-panel-node.js";
-import EditorPanelLinks from "./editor-panel-links.js";
-import GraphView from "./graph-view.js";
-import EditorTopMenu from "./editor-top-menu.js";
+import { EditorPanelProperties } from "./editor-panel-properties.js";
+import { EditorPanelNode } from "./editor-panel-node.js";
+import { EditorPanelLinks } from "./editor-panel-links.js";
+import { GraphView } from "./graph-view.js";
+import { EditorTopMenu } from "./editor-top-menu.js";
 
 import { addNewNode, deleteNode, addNewLink, deleteLink, revertLink } from "../../data/graph-manipulation.js";
 
 import { loadGraphByRoute } from "../../data/gallery.js";
+
+/**
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
+ */
 
 /**
  * Current graph data is intentionally not part of Vue component state because it is huge object model
@@ -17,26 +24,11 @@ import { loadGraphByRoute } from "../../data/gallery.js";
  */
 let graphData;
 
-/**
- * @typedef {object} Editor
- * -- props
- * @property {string} route
- * -- state
- * @property {string} graphId
- * @property {string} graphTitle
- * @property {boolean} isLoading
- * @property {boolean} isReadonly
- * @property {boolean} isExportModalOpened
- * @property {GraphLayoutOptions=} layoutOptions
- * @property {GraphNode=} selectedNode
- * @property {number} graphStructureUpdatesCount
- * --methods
- * @property {function} loadData
- *
- * @typedef {Editor & VueComponent} EditorVue
- */
+const component = {
+  props: {
+    route: /** @type {string} */ (/** @type {any} */ (String)),
+  },
 
-export default {
   data() {
     return {
       isLoading: true,
@@ -50,10 +42,6 @@ export default {
       isReadonly: false,
       graphId: "",
     };
-  },
-
-  props: {
-    route: String,
   },
 
   /**
@@ -74,7 +62,7 @@ export default {
   },
 
   /**
-   * @this {EditorVue}
+   * @this {ThisVueComponent}
    */
   async mounted() {
     this.loadData();
@@ -84,8 +72,7 @@ export default {
   },
 
   /**
-   * @this {EditorVue}
-   * @returns {any} html
+   * @this {ThisVueComponent}
    */
   render() {
     const { layoutOptions, selectedNode, isLoading } = this;
@@ -176,6 +163,7 @@ export default {
         </div>
         <${GraphView}
           graph=${graphData}
+          graphTitle=${this.graphTitle}
           graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
           layoutOptions=${layoutOptions}
           selectedNode=${selectedNode}
@@ -208,7 +196,7 @@ export default {
 
   methods: {
     /**
-     * @this {EditorVue}
+     * @this {ThisVueComponent}
      */
     async loadData() {
       this.isLoading = true;
@@ -222,3 +210,6 @@ export default {
     },
   },
 };
+
+export default component;
+export { component as EditorMain };

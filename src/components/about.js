@@ -1,14 +1,7 @@
 import { html } from "../dependencies.js";
-import TopPanel from "./top-panel.js";
+import { TopPanel } from "./top-panel.js";
 
-/**
- * @typedef {object} About
- */
-
-export default {
-  /**
-   * @this {About}
-   */
+const component = {
   render() {
     return html`
       <div class="gallery">
@@ -31,3 +24,5 @@ export default {
     `;
   },
 };
+export default component;
+export { component as About };

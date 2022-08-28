@@ -1,18 +1,22 @@
 /**
- * @typedef {object} Modal
- * -- props
- * @property {string} title
- * @property {() => void} onclose
- *
- * @typedef {Modal & VueComponent} ModalVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   name: "Modal",
   props: {
-    title: String,
-    onclose: Function,
+    title: /** @type {string} */ (/** @type {any} */ (String)),
+    onclose: /** @type {Function} */ (/** @type {any} */ (Function)),
   },
+
+  data() {
+    return {};
+  },
+
+  methods: {},
 
   /**
    * This component is using Vuew templating instead of HTM because of problems handling slots
@@ -33,3 +37,6 @@ export default {
       </div>
   `,
 };
+
+export default component;
+export { component as Modal };

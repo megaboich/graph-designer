@@ -1,7 +1,7 @@
 import { html, saveAs } from "../../dependencies.js";
 
-import TopPanel from "../top-panel.js";
-import Modal from "../generic/modal.js";
+import { TopPanel } from "../top-panel.js";
+import { Modal } from "../generic/modal.js";
 import { serializeToJSON } from "../../data/graph-serialization.js";
 
 import { getRandomName } from "../../helpers/get-random-name.js";
@@ -10,29 +10,18 @@ import { saveToLocalStorage, removeFromLocalStorage, getGalleryGraphRoute } from
 import { kebabify } from "../../helpers/misc.js";
 
 /**
- * @typedef {object} EditorTopMenu
- * -- props
- * @property {GraphData} graph
- * @property {string} graphId
- * @property {string} graphTitle
- * @property {boolean} isReadonly
- * -- state
- * @property {boolean} isExportModalOpened
- * --methods
- * @property {(exportType: string)=>void} exportGraph
- * @property {function} saveAsGraph
- * @property {function} saveGraph
- * @property {function} deleteGraph
- *
- * @typedef {EditorTopMenu & VueComponent} EditorTopMenuVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   props: {
-    graph: Object,
-    graphId: String,
-    graphTitle: String,
-    isReadonly: Boolean,
+    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
+    graphId: /** @type {string} */ (/** @type {any} */ (String)),
+    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
+    isReadonly: /** @type {boolean} */ (/** @type {any} */ (Boolean)),
   },
 
   data() {
@@ -42,8 +31,7 @@ export default {
   },
 
   /**
-   * @this {EditorTopMenuVue}
-   * @returns {any} html
+   * @this {ThisVueComponent}
    */
   render() {
     return html`
@@ -127,8 +115,8 @@ export default {
 
   methods: {
     /**
+     * @this {ThisVueComponent}
      * @param {String} exportType
-     * @this {EditorTopMenuVue}
      */
     exportGraph(exportType) {
       switch (exportType) {
@@ -155,7 +143,7 @@ export default {
     },
 
     /**
-    @this {EditorTopMenuVue}
+    @this {ThisVueComponent}
     */
     async saveAsGraph() {
       const newTitle = getRandomName();
@@ -165,14 +153,14 @@ export default {
     },
 
     /**
-    @this {EditorTopMenuVue}
+    @this {ThisVueComponent}
     */
     async saveGraph() {
       await saveToLocalStorage(this.graph, this.graphTitle, this.graphId);
     },
 
     /**
-    @this {EditorTopMenuVue}
+    @this {ThisVueComponent}
     */
     async deleteGraph() {
       await removeFromLocalStorage(this.graphId);
@@ -180,3 +168,6 @@ export default {
     },
   },
 };
+
+export default component;
+export { component as EditorTopMenu };

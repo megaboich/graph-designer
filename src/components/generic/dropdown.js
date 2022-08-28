@@ -1,37 +1,31 @@
 import { html } from "../../dependencies.js";
 
 /**
- * @typedef {object} Dropdown
- * -- props
- * @property {string} label
- * @property {Array<DropdownItem | false>} items
- * @property {boolean} isRight
- * -- state
- * @property {string} instanceId
- * @property {boolean} isOpen
- * -- methods
- * @property {(show?: boolean)=>void} toggleMenu
- * @property {()=>void} handleGlobalClick
- *
- * @typedef {Dropdown & VueComponent} DropdownVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
 let instanceCounter = 0;
 
-export default {
+const component = {
   name: "Dropdown",
   props: {
-    label: String,
-    items: Array,
-    isRight: Boolean,
+    label: /** @type {string} */ (/** @type {any} */ (String)),
+    items: /** @type {Array<DropdownItem | false>} */ (/** @type {any} */ (Array)),
+    isRight: /** @type {boolean} */ (/** @type {any} */ (Boolean)),
   },
   data() {
-    return { isOpen: false };
+    return {
+      isOpen: false,
+      instanceId: "",
+    };
   },
   methods: {
     /**
+     * @this {ThisVueComponent}
      * @param {boolean=} show
-     * @this {DropdownVue}
      */
     toggleMenu(show = undefined) {
       const newIsOpen = show !== undefined ? show : !this.isOpen;
@@ -45,7 +39,7 @@ export default {
       this.isOpen = newIsOpen;
     },
     /**
-     * @this {DropdownVue}
+     * @this {ThisVueComponent}
      */
     handleGlobalClick() {
       this.toggleMenu(false);
@@ -53,7 +47,7 @@ export default {
   },
 
   /**
-   * @this {DropdownVue}
+   * @this {ThisVueComponent}
    */
   beforeMount() {
     this.instanceId = `drop${instanceCounter}`;
@@ -61,7 +55,7 @@ export default {
   },
 
   /**
-   * @this {DropdownVue}
+   * @this {ThisVueComponent}
    */
   render() {
     return html`
@@ -101,3 +95,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as Dropdown };

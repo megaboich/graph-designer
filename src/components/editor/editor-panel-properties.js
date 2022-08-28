@@ -1,23 +1,28 @@
 import { html } from "../../dependencies.js";
-import Select from "../generic/select.js";
+import { Select } from "../generic/select.js";
 
 /**
- * @typedef {object} EditorPanelProperties
- * -- props
- * @property {GraphLayoutOptions} layoutOptions
- * @property {string} graphTitle
- * @property {(data: {graphTitle: string})=>{}} onChange
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   props: {
-    layoutOptions: Object,
-    graphTitle: String,
-    onChange: Function,
+    layoutOptions: /** @type {GraphLayoutOptions} */ (/** @type {any} */ (Object)),
+    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
+    onChange: /** @type {(data: {graphTitle: string})=>{}} */ (/** @type {any} */ (Function)),
   },
 
+  data() {
+    return {};
+  },
+
+  methods: {},
+
   /**
-   * @this {EditorPanelProperties}
+   * @this {ThisVueComponent}
    */
   render() {
     const { layoutOptions } = this;
@@ -123,3 +128,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as EditorPanelProperties };

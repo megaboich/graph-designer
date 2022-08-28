@@ -1,23 +1,19 @@
 import { html } from "../dependencies.js";
-import TopPanel from "./top-panel.js";
+import { TopPanel } from "./top-panel.js";
 
 import { loadGallery } from "../data/gallery.js";
 import { chunks } from "../helpers/misc.js";
 
 /**
- * @typedef {object} Gallery
- * -- props
- * ...
- * -- state
- * @property {GalleryItem[]} entries
- * @property {Boolean} isLoading
- * --methods
- * ...
- *
- * @typedef {Gallery & VueComponent} GalleryVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
+  props: {},
+
   data() {
     return {
       /** @type {GalleryItem[]} */
@@ -26,17 +22,15 @@ export default {
     };
   },
 
-  /**
-   * @this {GalleryVue}
-   */
+  methods: {},
+
+  /** @this {ThisVueComponent} */
   async mounted() {
     this.entries = await loadGallery();
     this.isLoading = false;
   },
 
-  /**
-   * @this {GalleryVue}
-   */
+  /** @this {ThisVueComponent} */
   render() {
     const chunkedEntities = chunks(this.entries, 3);
     return html`
@@ -97,3 +91,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as Gallery };

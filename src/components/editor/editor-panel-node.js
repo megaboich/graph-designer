@@ -2,30 +2,32 @@ import { html } from "../../dependencies.js";
 import { assignNodeImageAndDimensions } from "../../data/graph-helpers.js";
 
 /**
- * @typedef {object} EditorPanelNode
- * -- props
- * @property {GraphNode} node
- * @property {GraphData} graph
- * @property {Function} onChange
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   props: {
-    node: Object,
-    graph: Object,
-    onChange: Function,
+    node: /** @type {GraphNode} */ (/** @type {any} */ (Object)),
+    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
+    onChange: /** @type {() => void} */ (/** @type {any} */ (Function)),
   },
 
-  /**
-   * @this {EditorPanelNode}
-   */
-  render() {
-    const onTextInputChange = (/** @type {HTMLInputEvent} */ e) => {
+  data() {
+    return {};
+  },
+
+  methods: {
+    /** @this {ThisVueComponent} */
+    onTextInputChange(/** @type {HTMLInputEvent} */ e) {
       this.node.label = e.target.value;
       this.onChange();
-    };
+    },
 
-    const onFileInputChange = (/** @type {HTMLInputEvent} */ e) => {
+    /** @this {ThisVueComponent} */
+    onFileInputChange(/** @type {HTMLInputEvent} */ e) {
       if (e.target && e.target.files && e.target.files.length > 0) {
         const reader = new FileReader();
         reader.onload = async (/** @type {any} */ e2) => {
@@ -37,14 +39,16 @@ export default {
         }
         reader.readAsDataURL(e.target.files[0]);
       }
-    };
+    },
 
-    const onUrlInputChange = async (/** @type {HTMLInputEvent} */ e) => {
+    /** @this {ThisVueComponent} */
+    async onUrlInputChange(/** @type {HTMLInputEvent} */ e) {
       await assignNodeImageAndDimensions(this.node, e.target.value);
       this.onChange();
-    };
+    },
 
-    const onImageZoomChange = (/** @type {HTMLInputEvent} */ e) => {
+    /** @this {ThisVueComponent} */
+    onImageZoomChange(/** @type {HTMLInputEvent} */ e) {
       const number = Number(e.target.value);
       if (!Number.isNaN(number)) {
         this.node.imageZoom = number;
@@ -52,9 +56,10 @@ export default {
         this.node.imageHeight = Math.round(((this.node.imageOriginalHeight || 1) * number) / 100);
         this.onChange();
       }
-    };
+    },
 
-    const onDeleteImageClick = () => {
+    /** @this {ThisVueComponent} */
+    onDeleteImageClick() {
       delete this.node.imageUrl;
       delete this.node.imageOriginalWidth;
       delete this.node.imageOriginalHeight;
@@ -62,13 +67,19 @@ export default {
       delete this.node.imageHeight;
       delete this.node.imageZoom;
       this.onChange();
-    };
+    },
 
-    const onFixedCheckboxChange = (/** @type {HTMLInputEvent} */ e) => {
+    /** @this {ThisVueComponent} */
+    onFixedCheckboxChange(/** @type {HTMLInputEvent} */ e) {
       this.node.fixed = Number(e.target.checked);
       this.onChange();
-    };
+    },
+  },
 
+  /**
+   * @this {ThisVueComponent}
+   */
+  render() {
     const textLinesCount = this.node.label ? this.node.label.split(`\n`).length : 1;
 
     return html`
@@ -90,7 +101,7 @@ export default {
                       placeholder="Text label of the node"
                       rows=${textLinesCount}
                       value=${this.node.label}
-                      oninput=${onTextInputChange}
+                      oninput=${this.onTextInputChange}
                     ></textarea>
                   </div>
                 </div>
@@ -111,7 +122,7 @@ export default {
                       type="text" 
                       placeholder="Image url or upload" 
                       value=${this.node.imageUrl} 
-                      onchange=${onUrlInputChange}
+                      onchange=${this.onUrlInputChange}
                     />
                   </p>
                   <p class="control">
@@ -121,7 +132,7 @@ export default {
                           class="file-input" 
                           type="file" 
                           name="resume"
-                          onchange=${onFileInputChange} 
+                          onchange=${this.onFileInputChange} 
                         />
                         <span class="file-cta">
                           <span class="icon is-small">
@@ -146,7 +157,7 @@ export default {
                     <div class="control">
                       <div class="node-img-url-container">
                         ${this.node.imageUrl.startsWith("data:")
-                          ? `${this.node.imageUrl.substr(0, 48)}...`
+                          ? `${this.node.imageUrl.substring(0, 48)}...`
                           : this.node.imageUrl}
                       </div>
                     </div>
@@ -156,7 +167,7 @@ export default {
                       <button
                         title="Delete image"
                         class="button is-danger is-slim p-2 mt-1"
-                        onclick=${onDeleteImageClick}
+                        onclick=${this.onDeleteImageClick}
                       >
                         <span class="icon is-small">
                           <i class="far fa-trash-alt"></i>
@@ -179,7 +190,7 @@ export default {
                         min="1"
                         placeholder="Zoom"
                         value=${this.node.imageZoom}
-                        oninput=${onImageZoomChange}
+                        oninput=${this.onImageZoomChange}
                       />
                       <span class="icon is-small is-left">
                         <i class="fas fa-search-plus"></i>
@@ -209,7 +220,7 @@ export default {
                         id="is-node-fixed"
                         type="checkbox"
                         checked=${this.node.fixed}
-                        onchange=${onFixedCheckboxChange}
+                        onchange=${this.onFixedCheckboxChange}
                       />
                     </label>
                   </div>
@@ -222,3 +233,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as EditorPanelNode };

@@ -1,17 +1,16 @@
 import { html } from "../dependencies.js";
-import Dropdown from "./generic/dropdown.js";
+import { Dropdown } from "./generic/dropdown.js";
 
 /**
- * @typedef {object} TopPanel
- * -- props
- * @property {DropdownItem[]} topRightMenuItems
- *
- * @typedef {TopPanel & VueComponent} TopPanelVue
+ * @typedef {typeof component.props} Props
+ * @typedef {ReturnType<typeof component.data>} State
+ * @typedef {typeof component.methods} Methods
+ * @typedef {Props & State & Methods & VueComponent} ThisVueComponent
  */
 
-export default {
+const component = {
   props: {
-    topRightMenuItems: Array,
+    topRightMenuItems: /** @type {DropdownItem[]=} */ (/** @type {any} */ (Array)),
   },
 
   data() {
@@ -20,8 +19,10 @@ export default {
     };
   },
 
+  methods: {},
+
   /**
-   * @this {TopPanelVue}
+   * @this {ThisVueComponent}
    */
   render() {
     const { topRightMenuItems } = this;
@@ -72,3 +73,6 @@ export default {
     `;
   },
 };
+
+export default component;
+export { component as TopPanel };
