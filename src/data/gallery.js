@@ -2,6 +2,7 @@ import examplesCatalog from "../../graph-samples/_catalog.js";
 import { loadGraphFromJSON, serializeToJSON } from "./graph-serialization.js";
 import { kebabify } from "../helpers/misc.js";
 import { getGraphSvgImage } from "./graph-helpers.js";
+import { getRandomName } from "../helpers/get-random-name.js";
 
 const LOCAL_STORAGE_PREFIX = "graph-data-";
 
@@ -158,4 +159,20 @@ export async function removeFromLocalStorage(id) {
   } catch (ex) {
     // TODO: show notification maybe
   }
+}
+
+/**
+ * Imports graph to the library
+ * Returns the route identifier
+ * @param {string} json
+ * @return {Promise<string>}
+ */
+export async function importGraphToLibraryFromJSON(json) {
+  /** @type {GraphSerializedData} */
+  const serializedGraphData = JSON.parse(json);
+  const graph = await loadGraphFromJSON(serializedGraphData);
+  const newTitle = getRandomName();
+  const newId = kebabify(newTitle);
+  await saveToLocalStorage(graph, newTitle, newId);
+  return newId;
 }

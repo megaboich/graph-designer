@@ -1,5 +1,6 @@
 import { html } from "../dependencies.js";
 import { TopPanel } from "./top-panel.js";
+import { ImportDialog } from "./dialogs/import-dialog.js";
 
 import { loadGallery } from "../data/gallery.js";
 import { chunks } from "../helpers/misc.js";
@@ -19,6 +20,7 @@ const component = {
       /** @type {GalleryItem[]} */
       entries: [],
       isLoading: true,
+      isImportDialogActive: false,
     };
   },
 
@@ -40,8 +42,9 @@ const component = {
             topRightMenuItems=${[
               {
                 label: "Import",
-                // eslint-disable-next-line no-alert
-                onclick: () => alert("Not yet implemented!"),
+                onclick: () => {
+                  this.isImportDialogActive = true;
+                },
               },
               {
                 separator: true,
@@ -51,6 +54,12 @@ const component = {
                 onclick: () => {},
               },
             ]}
+          />
+          <${ImportDialog}
+            show=${this.isImportDialogActive}
+            onClose=${() => {
+              this.isImportDialogActive = false;
+            }}
           />
         </div>
         <div id="main" class="section">

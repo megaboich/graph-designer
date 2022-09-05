@@ -85,8 +85,7 @@ const component = {
                     </button>
                   </td>
                   <td>
-                    <p>Creates a SVG image attributed with complete metadata.</p>
-                    <p>Can be imported back and also used as graphics just like any other svg.</p>
+                    <p>Creates a SVG image.</p>
                   </td>
                 </tr>
                 <tr>
@@ -103,6 +102,25 @@ const component = {
                   </td>
                   <td class="pt-5">
                     <p>Saves the graph data in custom JSON format. Can be imported back.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="pt-5">
+                    <button
+                      class="button is-info"
+                      onclick=${() => {
+                        //
+                      }}
+                    >
+                      Export to Base64
+                    </button>
+                  </td>
+                  <td class="pt-5">
+                    <p>
+                      Saves the graph data in custom Base64 encoded format. Can be used to share in text form like
+                      messengers, urls or internet forums.
+                    </p>
+                    <p>(Not implemented yet)</p>
                   </td>
                 </tr>
               </tbody>
