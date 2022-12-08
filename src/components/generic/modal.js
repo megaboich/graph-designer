@@ -1,3 +1,5 @@
+import { vueProp } from "../../helpers/vue-prop.js";
+
 /**
  * @typedef {typeof component.props} Props
  * @typedef {ReturnType<typeof component.data>} State
@@ -8,8 +10,8 @@
 const component = {
   name: "Modal",
   props: {
-    title: /** @type {string} */ (/** @type {any} */ (String)),
-    onclose: /** @type {Function} */ (/** @type {any} */ (Function)),
+    title: vueProp(String),
+    onclose: vueProp(Function),
   },
 
   data() {
@@ -38,5 +40,4 @@ const component = {
   `,
 };
 
-export default component;
 export { component as Modal };

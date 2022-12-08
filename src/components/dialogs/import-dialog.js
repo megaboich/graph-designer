@@ -2,6 +2,7 @@ import { html } from "../../dependencies.js";
 
 import { Modal } from "../generic/modal.js";
 import { importGraphToLibraryFromJSON } from "../../data/gallery.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -20,8 +21,10 @@ import { importGraphToLibraryFromJSON } from "../../data/gallery.js";
 
 const component = {
   props: {
-    show: /** @type {boolean} */ (/** @type {any} */ (Boolean)),
-    onClose: /** @type {() => void} */ (/** @type {any} */ (Function)),
+    show: vueProp(Boolean),
+
+    /** @type {() => void} */
+    onClose: vueProp(Function),
   },
 
   data() {
@@ -177,5 +180,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as ImportDialog };

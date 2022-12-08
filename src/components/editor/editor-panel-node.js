@@ -1,5 +1,6 @@
 import { html } from "../../dependencies.js";
 import { assignNodeImageAndDimensions } from "../../data/graph-helpers.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -10,9 +11,14 @@ import { assignNodeImageAndDimensions } from "../../data/graph-helpers.js";
 
 const component = {
   props: {
-    node: /** @type {GraphNode} */ (/** @type {any} */ (Object)),
-    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
-    onChange: /** @type {() => void} */ (/** @type {any} */ (Function)),
+    /** @type {GraphNode} */
+    node: vueProp(Object),
+
+    /** @type {GraphData} */
+    graph: vueProp(Object),
+
+    /** @type {() => void} */
+    onChange: vueProp(Function),
   },
 
   data() {
@@ -76,9 +82,7 @@ const component = {
     },
   },
 
-  /**
-   * @this {ThisVueComponent}
-   */
+  /** @this {ThisVueComponent} */
   render() {
     const textLinesCount = this.node.label ? this.node.label.split(`\n`).length : 1;
 
@@ -234,5 +238,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as EditorPanelNode };

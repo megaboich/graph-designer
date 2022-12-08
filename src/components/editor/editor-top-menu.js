@@ -8,6 +8,7 @@ import { getRandomName } from "../../helpers/get-random-name.js";
 import { getGraphSvgImage } from "../../data/graph-helpers.js";
 import { saveToLocalStorage, removeFromLocalStorage, getGalleryGraphRoute } from "../../data/gallery.js";
 import { kebabify } from "../../helpers/misc.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -18,10 +19,12 @@ import { kebabify } from "../../helpers/misc.js";
 
 const component = {
   props: {
-    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
-    graphId: /** @type {string} */ (/** @type {any} */ (String)),
-    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
-    isReadonly: /** @type {boolean} */ (/** @type {any} */ (Boolean)),
+    /** @type {GraphData} */
+    graph: vueProp(Object),
+
+    graphId: vueProp(String),
+    graphTitle: vueProp(String),
+    isReadonly: vueProp(Boolean),
   },
 
   data() {
@@ -161,8 +164,8 @@ const component = {
     },
 
     /**
-    @this {ThisVueComponent}
-    */
+     * @this {ThisVueComponent}
+     */
     async saveAsGraph() {
       const newTitle = getRandomName();
       const newId = kebabify(newTitle);
@@ -171,15 +174,15 @@ const component = {
     },
 
     /**
-    @this {ThisVueComponent}
-    */
+     * @this {ThisVueComponent}
+     */
     async saveGraph() {
       await saveToLocalStorage(this.graph, this.graphTitle, this.graphId);
     },
 
     /**
-    @this {ThisVueComponent}
-    */
+     * @this {ThisVueComponent}
+     */
     async deleteGraph() {
       await removeFromLocalStorage(this.graphId);
       window.location.hash = "#";
@@ -187,5 +190,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as EditorTopMenu };

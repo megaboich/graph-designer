@@ -9,6 +9,7 @@ import { EditorTopMenu } from "./editor-top-menu.js";
 import { addNewNode, deleteNode, addNewLink, deleteLink, revertLink } from "../../data/graph-manipulation.js";
 
 import { loadGraphByRoute } from "../../data/gallery.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -26,27 +27,23 @@ let graphData;
 
 const component = {
   props: {
-    route: /** @type {string} */ (/** @type {any} */ (String)),
+    route: vueProp(String),
   },
 
   data() {
     return {
       isLoading: true,
-      /** @type {GraphLayoutOptions=} */
-      layoutOptions: undefined,
+      /** @type {GraphOptions=} */
+      graphOptions: undefined,
       /** @type {GraphNode=} */
       selectedNode: undefined,
       graphStructureUpdatesCount: 0,
       isExportModalOpened: false,
-      graphTitle: "",
       isReadonly: false,
       graphId: "",
     };
   },
 
-  /**
-   * @this {EditorVue}
-   */
   async created() {
     /**
      * Because `graphData` is not a part of Vue component
@@ -75,8 +72,8 @@ const component = {
    * @this {ThisVueComponent}
    */
   render() {
-    const { layoutOptions, selectedNode, isLoading } = this;
-    if (!graphData || isLoading)
+    const { isLoading, graphOptions, selectedNode, graphId, isReadonly } = this;
+    if (isLoading || !graphData || !graphOptions)
       return html`
         <div id="left-panel">Loading</div>
       `;
@@ -85,19 +82,19 @@ const component = {
       <div class="editor-main">
         <${EditorTopMenu}
           graph=${graphData}
-          graphId=${this.graphId}
-          graphTitle=${this.graphTitle}
-          isReadonly=${this.isReadonly}
+          graphId=${graphId}
+          graphTitle=${graphOptions.title}
+          isReadonly=${isReadonly}
         />
 
         <div id="left-panel">
           <${EditorPanelProperties}
-            layoutOptions=${layoutOptions}
-            graphTitle=${this.graphTitle}
-            onChange=${(/** @type {any} */ data) => {
-              if (data.graphTitle) {
-                this.graphTitle = data.graphTitle;
-              }
+            graphOptions=${graphOptions}
+            onChange=${(/** @type {Partial<GraphOptions>} */ change) => {
+              this.graphOptions = {
+                ...graphOptions,
+                ...change,
+              };
             }}
           />
 
@@ -144,9 +141,7 @@ const component = {
               graph=${graphData}
               node=${selectedNode}
               onNavigate=${(/** @type {GraphNode} */ node) => {
-                if (node) {
-                  this.selectedNode = node;
-                }
+                this.selectedNode = node;
               }}
               onDeleteLink=${(/** @type {GraphLink} */ link) => {
                 if (!graphData) return;
@@ -163,9 +158,8 @@ const component = {
         </div>
         <${GraphView}
           graph=${graphData}
-          graphTitle=${this.graphTitle}
           graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
-          layoutOptions=${layoutOptions}
+          graphOptions=${graphOptions}
           selectedNode=${selectedNode}
           onNodeClick=${(/** @type {MouseEvent} */ event, /** @type {GraphNode} */ node) => {
             if (graphData && selectedNode && node && event.shiftKey && selectedNode.id !== node.id) {
@@ -200,16 +194,14 @@ const component = {
      */
     async loadData() {
       this.isLoading = true;
-      const { graph, isReadonly, id, title } = await loadGraphByRoute(this.route);
+      const { graph, isReadonly, id } = await loadGraphByRoute(this.route);
       graphData = graph;
-      this.layoutOptions = graphData.layout;
+      this.graphOptions = graph.options;
       this.isLoading = false;
       this.graphId = id;
-      this.graphTitle = title;
       this.isReadonly = isReadonly;
     },
   },
 };
 
-export default component;
 export { component as EditorMain };

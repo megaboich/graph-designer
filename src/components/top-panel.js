@@ -1,5 +1,6 @@
 import { html } from "../dependencies.js";
 import { Dropdown } from "./generic/dropdown.js";
+import { vueProp } from "../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -10,7 +11,8 @@ import { Dropdown } from "./generic/dropdown.js";
 
 const component = {
   props: {
-    topRightMenuItems: /** @type {DropdownItem[]=} */ (/** @type {any} */ (Array)),
+    /** @type {DropdownItem[]=} */
+    topRightMenuItems: vueProp(Array),
   },
 
   data() {

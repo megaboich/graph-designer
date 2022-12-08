@@ -1,3 +1,4 @@
+import { getRandomName } from "../helpers/get-random-name.js";
 import { assignNodeImageAndDimensions } from "./graph-helpers.js";
 
 /**
@@ -52,7 +53,8 @@ export async function loadGraphFromJSON(data) {
 
   graph.transform = data.transform || { x: 0, y: 0, k: 1 };
 
-  graph.layout = data.layout || {
+  graph.options = data.options || {
+    title: getRandomName(),
     layoutType: "auto",
     linkDistance: 80,
     minSeparation: 160,
@@ -100,7 +102,7 @@ export function serializeToJSON(graph) {
       }),
     })),
     transform: graph.transform,
-    layout: graph.layout,
+    options: graph.options,
   };
 
   return graphJSON;

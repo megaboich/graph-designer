@@ -43,7 +43,7 @@
  * @property {Array<GraphGroup>} groups
  * @property {Array<any>} constraints
  * @property {GraphTransform} transform
- * @property {GraphLayoutOptions} layout
+ * @property {GraphOptions} options
  */
 
 /**
@@ -77,11 +77,12 @@
  * @property {Array<GraphSerializedLink>} links
  * @property {Array<GraphSerializedGroup>} groups
  * @property {GraphTransform} transform
- * @property {GraphLayoutOptions} layout
+ * @property {GraphOptions} options
  */
 
 /**
- * @typedef {object} GraphLayoutOptions
+ * @typedef {object} GraphOptions
+ * @property {string} title
  * @property {string} layoutType
  * @property {number} linkDistance
  * @property {number} minSeparation

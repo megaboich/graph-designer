@@ -1,4 +1,5 @@
 import { html } from "../../dependencies.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -9,11 +10,20 @@ import { html } from "../../dependencies.js";
 
 const component = {
   props: {
-    node: /** @type {GraphNode} */ (/** @type {any} */ (Object)),
-    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
-    onNavigate: /** @type {(node: GraphNode) => void} */ (/** @type {any} */ (Function)),
-    onDeleteLink: /** @type {(link: GraphLink) => void} */ (/** @type {any} */ (Function)),
-    onRevertLink: /** @type {(link: GraphLink) => void} */ (/** @type {any} */ (Function)),
+    /** @type {GraphNode} */
+    node: vueProp(Object),
+
+    /** @type {GraphData} */
+    graph: vueProp(Object),
+
+    /** @type {(node: GraphNode) => void} */
+    onNavigate: vueProp(Function),
+
+    /** @type {(link: GraphLink) => void} */
+    onDeleteLink: vueProp(Function),
+
+    /** @type {(link: GraphLink) => void} */
+    onRevertLink: vueProp(Function),
   },
 
   data() {
@@ -123,5 +133,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as EditorPanelLinks };

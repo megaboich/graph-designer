@@ -1,4 +1,5 @@
 import { html } from "../../dependencies.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -10,9 +11,13 @@ import { html } from "../../dependencies.js";
 const component = {
   name: "Select",
   props: {
-    value: /** @type {string} */ (/** @type {any} */ (String)),
-    options: /** @type {{value: string, text: string}[]} */ (/** @type {any} */ (Array)),
-    onchange: /** @type {(value: string) => void} */ (/** @type {any} */ (Function)),
+    value: vueProp(String),
+
+    /** @type {{value: string, text: string}[]} */
+    options: vueProp(Array),
+
+    /** @type {(value: string) => void} */
+    onchange: vueProp(Function),
   },
   data() {
     return {};
@@ -38,5 +43,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as Select };

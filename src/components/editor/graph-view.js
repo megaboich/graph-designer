@@ -1,5 +1,6 @@
 import { GraphRendererD3 } from "./graph-renderer-d3.js";
 import { cola } from "../../dependencies.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -12,18 +13,27 @@ import { cola } from "../../dependencies.js";
  * Cola layout object is intentionally not a state variable because
  * Vue creates observable wrappers recursively which is a performance kill
  * @type {any}
- * */
+ */
 let layout;
 
 const component = {
   props: {
-    graph: /** @type {GraphData} */ (/** @type {any} */ (Object)),
-    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
-    layoutOptions: /** @type {GraphLayoutOptions} */ (/** @type {any} */ (Object)),
-    graphStructureUpdatesCount: /** @type {number} */ (/** @type {any} */ (Number)),
-    onNodeClick: /** @type {(event: any, node: GraphNode) => void} */ (/** @type {any} */ (Function)),
-    onBgClick: /** @type {(flags: any) => void} */ (/** @type {any} */ (Function)),
-    selectedNode: /** @type {GraphNode} */ (/** @type {any} */ (Object)),
+    /** @type {GraphData} */
+    graph: vueProp(Object),
+
+    /** @type {GraphOptions} */
+    graphOptions: vueProp(Object),
+
+    graphStructureUpdatesCount: vueProp(Number),
+
+    /** @type {(event: any, node: GraphNode) => void} */
+    onNodeClick: vueProp(Function),
+
+    /** @type {(flags: any) => void} */
+    onBgClick: vueProp(Function),
+
+    /** @type {GraphNode} */
+    selectedNode: vueProp(Object),
   },
 
   data() {
@@ -37,8 +47,8 @@ const component = {
     /** @this {ThisVueComponent} */
     initializeLayout(isUpdated = false) {
       const { graph } = this;
-      graph.layout = this.layoutOptions;
-      const { layoutType, minSeparation, linkDistance } = this.layoutOptions;
+      graph.options = this.graphOptions;
+      const { layoutType, minSeparation, linkDistance } = this.graphOptions;
       layout = new cola.Layout();
       layout
         .nodes(graph.nodes)
@@ -119,7 +129,7 @@ const component = {
       }
     }, 1000 / 60 /** 60fps */);
 
-    this.$watch("layoutOptions", this.restartLayout, { deep: true });
+    this.$watch("graphOptions", this.restartLayout, { deep: true });
     this.$watch("graphStructureUpdatesCount", () => {
       render.destroyElements();
       render.setupElements();
@@ -145,5 +155,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as GraphView };

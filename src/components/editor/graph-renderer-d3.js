@@ -121,12 +121,10 @@ export class GraphRendererD3 {
 
     const initialTransform = d3.zoomIdentity.translate(this.transform.x, this.transform.y).scale(this.transform.k);
 
+    /** @type {any} */
     const zoom = d3.zoom().on("zoom", zoomHandler);
 
-    // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
-    // @ts-ignore
     outer.call(zoom);
-    // @ts-ignore
     outer.call(zoom.transform, initialTransform);
   }
 
@@ -172,6 +170,7 @@ export class GraphRendererD3 {
 
     this.link = linksLayer.selectAll(".link").data(this.graph.links).enter().append("line").attr("class", "link");
 
+    /** @type {any} */
     const dragNode = d3
       .drag()
       .on("start", (ev, d) => {
@@ -198,8 +197,7 @@ export class GraphRendererD3 {
       .attr("height", (d) => d.height || 30)
       .on("mousedown", this.onNodeClick)
       .attr("class", "node")
-      // @ts-ignore
-      .call(dragNode); // Disable types check for next line because TypeScript wants to check generics, but it's impossible to define them with JSDoc for now.
+      .call(dragNode);
 
     this.needsNodeSizeAdjustment = true;
 

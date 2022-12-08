@@ -1,5 +1,6 @@
 import { html } from "../../dependencies.js";
 import { Select } from "../generic/select.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -10,9 +11,11 @@ import { Select } from "../generic/select.js";
 
 const component = {
   props: {
-    layoutOptions: /** @type {GraphLayoutOptions} */ (/** @type {any} */ (Object)),
-    graphTitle: /** @type {string} */ (/** @type {any} */ (String)),
-    onChange: /** @type {(data: {graphTitle: string})=>{}} */ (/** @type {any} */ (Function)),
+    /** @type {GraphOptions} */
+    graphOptions: vueProp(Object),
+
+    /** @type {(optionsChange: Partial<GraphOptions>)=>{}} */
+    onChange: vueProp(Function),
   },
 
   data() {
@@ -25,7 +28,7 @@ const component = {
    * @this {ThisVueComponent}
    */
   render() {
-    const { layoutOptions } = this;
+    const { graphOptions } = this;
 
     return html`
       <nav class="panel">
@@ -43,9 +46,9 @@ const component = {
                       class="input"
                       type="input"
                       min="10"
-                      value=${this.graphTitle}
+                      value=${graphOptions.title}
                       onchange=${(/** @type {HTMLInputEvent} */ e) => {
-                        this.onChange({ graphTitle: e.target.value });
+                        this.onChange({ title: e.target.value });
                       }}
                     />
                   </div>
@@ -61,7 +64,7 @@ const component = {
                   <div class="control">
                     <div class="select">
                       <${Select}
-                        value=${layoutOptions.layoutType}
+                        value=${graphOptions.layoutType}
                         options=${[
                           { value: "auto", text: "Auto" },
                           { value: "disabled", text: "Disabled" },
@@ -69,7 +72,7 @@ const component = {
                           { value: "flow-y", text: "Flow top to bottom" },
                         ]}
                         onchange=${(/** @type {string} */ val) => {
-                          layoutOptions.layoutType = val;
+                          this.onChange({ layoutType: val });
                         }}
                       />
                     </div>
@@ -77,7 +80,7 @@ const component = {
                 </div>
               </div>
             </div>
-            ${(layoutOptions.layoutType === "flow-x" || layoutOptions.layoutType === "flow-y") &&
+            ${(graphOptions.layoutType === "flow-x" || graphOptions.layoutType === "flow-y") &&
             html`
               <div class="field is-horizontal">
                 <div class="field-label is-small is-wide-2">
@@ -92,9 +95,9 @@ const component = {
                         class="input"
                         type="number"
                         min="10"
-                        value=${layoutOptions.minSeparation}
+                        value=${graphOptions.minSeparation}
                         oninput=${(/** @type {HTMLInputEvent} */ e) => {
-                          layoutOptions.minSeparation = parseInt(e.target.value, 10);
+                          this.onChange({ minSeparation: parseInt(e.target.value, 10) });
                         }}
                       />
                     </div>
@@ -113,9 +116,9 @@ const component = {
                       class="input"
                       type="number"
                       min="10"
-                      value=${layoutOptions.linkDistance}
+                      value=${graphOptions.linkDistance}
                       oninput=${(/** @type {HTMLInputEvent} */ e) => {
-                        layoutOptions.linkDistance = parseInt(e.target.value, 10);
+                        this.onChange({ linkDistance: parseInt(e.target.value, 10) });
                       }}
                     />
                   </div>
@@ -129,5 +132,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as EditorPanelProperties };

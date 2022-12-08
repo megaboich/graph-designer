@@ -24,5 +24,5 @@ const component = {
     `;
   },
 };
-export default component;
+
 export { component as About };

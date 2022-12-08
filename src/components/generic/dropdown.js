@@ -1,4 +1,5 @@
 import { html } from "../../dependencies.js";
+import { vueProp } from "../../helpers/vue-prop.js";
 
 /**
  * @typedef {typeof component.props} Props
@@ -12,9 +13,12 @@ let instanceCounter = 0;
 const component = {
   name: "Dropdown",
   props: {
-    label: /** @type {string} */ (/** @type {any} */ (String)),
-    items: /** @type {Array<DropdownItem | false>} */ (/** @type {any} */ (Array)),
-    isRight: /** @type {boolean} */ (/** @type {any} */ (Boolean)),
+    label: vueProp(String),
+
+    /** @type {Array<DropdownItem | false>} */
+    items: vueProp(Array),
+
+    isRight: vueProp(Boolean),
   },
   data() {
     return {
@@ -96,5 +100,4 @@ const component = {
   },
 };
 
-export default component;
 export { component as Dropdown };
