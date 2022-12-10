@@ -9,6 +9,10 @@ import { cola, d3 } from "../../dependencies.js";
  * @callback GraphBgClick
  * @param {{x:number, y:number, event:MouseEvent}} flags
  * @returns {void}
+ * 
+ * @callback GraphNodeMove
+ * @param {GraphNode} node
+ * @returns {void}
  */
 
 const NODE_FONT_SIZE = 14;
@@ -19,24 +23,24 @@ export class GraphRendererD3 {
   /**
    * @param {Object} param0
    * @param {GraphData} param0.graph
-   * @param {Function} param0.onUpdate
+   * @param {GraphNodeMove} param0.onNodeMove
    * @param {GraphNodeClick} param0.onNodeClick
    * @param {GraphBgClick} param0.onBgClick
    */
-  constructor({ graph, onUpdate, onNodeClick, onBgClick }) {
+  constructor({ graph, onNodeMove, onNodeClick, onBgClick }) {
     this.graph = graph;
-    this.onUpdate = onUpdate;
+    this.onNodeMove = onNodeMove;
     this.onNodeClick = onNodeClick;
     this.onBgClick = onBgClick;
     this.transform = graph.transform || { x: 0, y: 0, k: 1 };
-    this.needsNodeSizeAdjustment = false;
     this.selectedNodeId = null;
+    this.nodeSizeWasChangedDuringRender = false;
 
-    this.setupContainer();
-    this.setupElements();
+    this.renderContainer();
+    this.renderElements();
   }
 
-  setupContainer() {
+  renderContainer() {
     const outer = d3
       .select("#main")
       .append("svg")
@@ -45,6 +49,9 @@ export class GraphRendererD3 {
       .attr("pointer-events", "all");
     this.outer = outer;
 
+    /**
+     * Inlining CSS styles to make svg element self-sufficient for export purposes
+     */
     outer.append("style").text(`
       .background {
         fill: white;
@@ -126,6 +133,28 @@ export class GraphRendererD3 {
 
     outer.call(zoom);
     outer.call(zoom.transform, initialTransform);
+
+    this.groupsLayer = this.vis.append("g").attr("data-groups-layer", true).attr("pointer-events", "none");
+    this.nodesLayer = this.vis.append("g").attr("data-nodes-layer", true);
+    this.linksLayer = this.vis.append("g").attr("data-links-layer", true);
+
+    /** @type {any} */
+    this.dragNode = d3
+      .drag()
+      .on("start", (ev, d) => {
+        // console.log("start");
+        cola.Layout.dragStart(d);
+      })
+      .on("drag", (ev, d) => {
+        // console.log("drag", { x: ev.x, y: ev.y });
+        cola.Layout.drag(d, ev);
+        this.onNodeMove(d);
+      })
+      .on("end", (ev, d) => {
+        // console.log("end");
+        cola.Layout.dragEnd(d);
+        this.onNodeMove(d);
+      });
   }
 
   /**
@@ -143,23 +172,16 @@ export class GraphRendererD3 {
     }
   }
 
-  setupElements() {
-    const { vis } = this;
-    if (!vis) {
+  renderElements() {
+    const { vis, groupsLayer, nodesLayer, linksLayer } = this;
+    if (!vis || !groupsLayer || !nodesLayer || !linksLayer) {
       return;
     }
-    const groupsLayer = vis.append("g");
-    groupsLayer.attr("data-groups-layer", true);
-    groupsLayer.attr("pointer-events", "none");
-
-    const nodesLayer = vis.append("g");
-    nodesLayer.attr("data-nodes-layer", true);
-    this.nodesLayer = nodesLayer;
-    const linksLayer = vis.append("g");
-    linksLayer.attr("data-links-layer", true);
+    const _this = this;
 
     this.group = groupsLayer
       .selectAll(".group")
+      /** Bind groups */
       .data(this.graph.groups)
       .enter()
       .append("rect")
@@ -168,69 +190,36 @@ export class GraphRendererD3 {
       .attr("class", "group")
       .attr("style", (d) => d.style);
 
-    this.link = linksLayer.selectAll(".link").data(this.graph.links).enter().append("line").attr("class", "link");
-
-    /** @type {any} */
-    const dragNode = d3
-      .drag()
-      .on("start", (ev, d) => {
-        // console.log("start");
-        cola.Layout.dragStart(d);
-      })
-      .on("drag", (ev, d) => {
-        // console.log("drag", { x: ev.x, y: ev.y });
-        cola.Layout.drag(d, ev);
-        this.onUpdate();
-      })
-      .on("end", (ev, d) => {
-        // console.log("end");
-        cola.Layout.dragEnd(d);
-        this.onUpdate();
-      });
-
-    this.node = nodesLayer
-      .selectAll(".node")
-      .data(this.graph.nodes)
-      .enter()
-      .append("svg")
-      .attr("width", (d) => d.width || 30)
-      .attr("height", (d) => d.height || 30)
-      .on("mousedown", this.onNodeClick)
-      .attr("class", "node")
-      .call(dragNode);
-
-    this.needsNodeSizeAdjustment = true;
+    this.link = linksLayer
+      .selectAll(".link")
+      /** Bind links */
+      .data(this.graph.links)
+      .join(
+        (enter) => enter.append("line").attr("class", "link"),
+        (update) => update,
+        (exit) => exit.remove()
+      );
 
     /**
      * @this {SVGElement}
      * @param {GraphNode} d
      */
-    function construstNodeChildElements(d) {
+    function renderNodeElements(d) {
       const words = d.label.split("\n");
       const el = d3.select(this);
 
       el.append("rect").attr("class", "node-bg").attr("width", "100%").attr("height", "100%");
 
       if (d.imageUrl) {
-        const image = el
-          .append("image")
+        el.append("image")
           .attr("href", d.imageUrl)
-          .attr("style", `transform: translate(calc(50% - ${(d.imageWidth || 1) / 2}.001px), ${NODE_PADDING_TOP}px);`)
           .attr("width", d.imageWidth || 1)
-          .attr("height", d.imageHeight || 1)
-          .on("load", () => {
-            // This adds additional repaint/reflow on image load just to fix Chrome weird behavior of not applying calc at the first rendering of the node
-            image.attr(
-              "style",
-              `transform: translate(calc(50% - ${(d.imageWidth || 1) / 2}px), ${NODE_PADDING_TOP}px);`
-            );
-          });
+          .attr("height", d.imageHeight || 1);
       }
 
       const text = el
         .append("text")
         .attr("class", "label")
-        .attr("x", "50%")
         .attr("y", "0")
         .attr("dominant-baseline", "middle")
         .attr("text-anchor", "middle");
@@ -244,15 +233,56 @@ export class GraphRendererD3 {
             i === 0 ? NODE_FONT_SIZE + (d.imageUrl ? d.imageHeight || 1 + NODE_PADDING_TOP / 2 : 0) : NODE_FONT_SIZE
           );
       }
+
+      // Calculating node width and height
+      const gTextNode = text.node();
+      if (gTextNode) {
+        const bbText = gTextNode.getBBox();
+        const nw = Math.max(bbText.width, d.imageUrl ? d.imageWidth || 1 : 0) + NODE_PADDING_LEFT * 2;
+        const nh = bbText.height + NODE_PADDING_TOP * 2 + (d.imageUrl ? d.imageHeight || 1 : 0);
+        if (nw !== d.width || nh !== d.height) {
+          d.width = nw;
+          d.height = nh;
+          _this.nodeSizeWasChangedDuringRender = true;
+        }
+      }
+
+      if (d.imageUrl) {
+        el.select("image")
+          .attr("x", ((d.width || 0) - (d.imageWidth || 0)) / 2)
+          .attr("y", NODE_PADDING_TOP);
+      }
     }
 
-    this.node.each(construstNodeChildElements);
-  }
-
-  destroyElements() {
-    if (this.vis) {
-      this.vis.selectAll("*").remove();
+    /**
+     * @this {SVGElement}
+     * @param {GraphNode} d
+     */
+    function rerenderNodeElements(d) {
+      if (d.needsToRerender) {
+        d3.select(this).selectAll("*").remove();
+        renderNodeElements.bind(this)(d);
+        d.needsToRerender = false;
+      }
     }
+
+    this.node = nodesLayer
+      .selectAll(".node")
+      /** Bind nodes */
+      .data(this.graph.nodes, (d) => d.id)
+      .join(
+        (enter) =>
+          enter
+            .append("svg")
+            .attr("width", (d) => d.width || 30)
+            .attr("height", (d) => d.height || 30)
+            .on("mousedown", this.onNodeClick)
+            .attr("class", "node")
+            .call(this.dragNode)
+            .each(renderNodeElements),
+        (update) => update.each(rerenderNodeElements),
+        (exit) => exit.remove()
+      );
   }
 
   /**
@@ -262,8 +292,12 @@ export class GraphRendererD3 {
     this.selectedNodeId = selectedNodeId;
   }
 
-  update() {
-    const { node, link, group, onUpdate } = this;
+  /**
+   * Updates some elements with most recent simple data changes - like coordinates of nodes and links or selection status
+   * @returns
+   */
+  updateElements() {
+    const { node, link, group } = this;
     if (!node || !link || !group) {
       return;
     }
@@ -277,26 +311,6 @@ export class GraphRendererD3 {
       .attr("y1", (d) => d.route.sourceIntersection.y.toFixed(1))
       .attr("x2", (d) => d.route.arrowStart.x.toFixed(1))
       .attr("y2", (d) => d.route.arrowStart.y.toFixed(1));
-
-    /**
-     * @param {GraphNode} d
-     * @this {SVGGraphicsElement}
-     */
-    function adjustNodeSize(d) {
-      const bb = this.getBBox();
-      const nw = Math.max(bb.width, d.imageUrl ? d.imageWidth || 1 : 0) + NODE_PADDING_LEFT * 2;
-      const nh = bb.height + NODE_PADDING_TOP * 2 + (d.imageUrl ? d.imageHeight || 1 : 0);
-      if (nw !== d.width || nh !== d.height) {
-        d.width = nw;
-        d.height = nh;
-        onUpdate(true);
-      }
-    }
-
-    if (this.needsNodeSizeAdjustment) {
-      node.select(".label").each(adjustNodeSize);
-      this.needsNodeSizeAdjustment = false;
-    }
 
     node
       .attr("data-selected", (d) => (d.id === this.selectedNodeId ? true : null))

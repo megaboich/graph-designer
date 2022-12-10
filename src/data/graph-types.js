@@ -19,6 +19,7 @@
  * @property {number=} imageZoom
  * @property {number=} imageWidth
  * @property {number=} imageHeight
+ * @property {boolean=} needsToRerender  Flag indicating that some node graphical attributes were changed and render is needed
  */
 
 /**

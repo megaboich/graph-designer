@@ -66,10 +66,10 @@ const component = {
                       <${Select}
                         value=${graphOptions.layoutType}
                         options=${[
-                          { value: "auto", text: "Auto" },
-                          { value: "disabled", text: "Disabled" },
+                          { value: "auto", text: "Force Centered" },
                           { value: "flow-x", text: "Flow left to right" },
                           { value: "flow-y", text: "Flow top to bottom" },
+                          { value: "disabled", text: "None" },
                         ]}
                         onchange=${(/** @type {string} */ val) => {
                           this.onChange({ layoutType: val });

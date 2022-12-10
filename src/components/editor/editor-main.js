@@ -37,7 +37,7 @@ const component = {
       graphOptions: undefined,
       /** @type {GraphNode=} */
       selectedNode: undefined,
-      graphStructureUpdatesCount: 0,
+      graphLayoutTrigger: 0,
       isExportModalOpened: false,
       isReadonly: false,
       graphId: "",
@@ -104,7 +104,7 @@ const component = {
               onclick=${() => {
                 if (!graphData) return;
                 addNewNode(graphData, selectedNode && selectedNode.id);
-                this.graphStructureUpdatesCount++;
+                this.graphLayoutTrigger++;
               }}
             >
               Add node
@@ -117,7 +117,7 @@ const component = {
                   if (!graphData) return;
                   deleteNode(graphData, selectedNode && selectedNode.id);
                   this.selectedNode = undefined;
-                  this.graphStructureUpdatesCount++;
+                  this.graphLayoutTrigger++;
                 }}
               >
                 <span>Delete node</span>
@@ -131,7 +131,8 @@ const component = {
               graph=${graphData}
               node=${selectedNode}
               onChange=${() => {
-                this.graphStructureUpdatesCount++;
+                selectedNode.needsToRerender = true;
+                this.graphLayoutTrigger++;
               }}
             />
           `}
@@ -146,25 +147,25 @@ const component = {
               onDeleteLink=${(/** @type {GraphLink} */ link) => {
                 if (!graphData) return;
                 deleteLink(graphData, link);
-                this.graphStructureUpdatesCount++;
+                this.graphLayoutTrigger++;
               }}
               onRevertLink=${(/** @type {GraphLink} */ link) => {
                 if (!graphData) return;
                 revertLink(graphData, link);
-                this.graphStructureUpdatesCount++;
+                this.graphLayoutTrigger++;
               }}
             />
           `}
         </div>
         <${GraphView}
           graph=${graphData}
-          graphStructureUpdatesCount=${this.graphStructureUpdatesCount}
+          graphLayoutTrigger=${this.graphLayoutTrigger}
           graphOptions=${graphOptions}
           selectedNode=${selectedNode}
           onNodeClick=${(/** @type {MouseEvent} */ event, /** @type {GraphNode} */ node) => {
             if (graphData && selectedNode && node && event.shiftKey && selectedNode.id !== node.id) {
               if (addNewLink(graphData, selectedNode.id, node.id)) {
-                this.graphStructureUpdatesCount++;
+                this.graphLayoutTrigger++;
               }
             }
 
@@ -178,7 +179,7 @@ const component = {
                 x: params.x,
                 y: params.y,
               });
-              this.graphStructureUpdatesCount++;
+              this.graphLayoutTrigger++;
             } else {
               this.selectedNode = undefined;
             }

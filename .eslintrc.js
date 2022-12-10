@@ -20,6 +20,7 @@ module.exports = {
     "no-plusplus": "off",
     "no-param-reassign": "off",
     "no-restricted-syntax": "off",
+    "no-underscore-dangle": ["error", { allow: ["_this"] }],
 
     "jsdoc/valid-types": 1,
     "jsdoc/check-syntax": 1,

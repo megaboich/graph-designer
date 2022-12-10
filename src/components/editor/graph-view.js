@@ -24,7 +24,7 @@ const component = {
     /** @type {GraphOptions} */
     graphOptions: vueProp(Object),
 
-    graphStructureUpdatesCount: vueProp(Number),
+    graphLayoutTrigger: vueProp(Number),
 
     /** @type {(event: any, node: GraphNode) => void} */
     onNodeClick: vueProp(Function),
@@ -97,17 +97,11 @@ const component = {
   mounted() {
     const { graph } = this;
 
-    this.initializeLayout();
-
     const render = new GraphRendererD3({
       graph,
-      onUpdate: (/** @type {Boolean} */ forceLayout) => {
+      onNodeMove: () => {
         this.needsUpdate = true;
-        if (forceLayout) {
-          layout.start(0, 0, 0, 0, true, false);
-        } else {
-          layout.resume();
-        }
+        layout.resume();
       },
       onNodeClick: (event, node) => {
         this.onNodeClick(event, node);
@@ -119,22 +113,23 @@ const component = {
       },
     });
 
-    render.update();
+    this.initializeLayout();
+
+    render.updateElements();
 
     this.timerId = setInterval(() => {
       if (this.needsUpdate) {
         layout.tick();
         render.setSelectedNodeId(this.selectedNode && this.selectedNode.id);
-        render.update();
+        render.updateElements();
       }
     }, 1000 / 60 /** 60fps */);
 
     this.$watch("graphOptions", this.restartLayout, { deep: true });
-    this.$watch("graphStructureUpdatesCount", () => {
-      render.destroyElements();
-      render.setupElements();
+    this.$watch("graphLayoutTrigger", () => {
+      render.renderElements();
       this.restartLayout();
-      render.update();
+      render.updateElements();
     });
     this.$watch("selectedNode", () => {
       this.needsUpdate = true;
